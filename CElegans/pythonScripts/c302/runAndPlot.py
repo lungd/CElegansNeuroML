@@ -125,6 +125,19 @@ if __name__ == '__main__':
         main('IClamp','D','',1000,0.05,'jNeuroML_NEURON',save=True)
     elif '-iD1' in sys.argv:
         main('IClamp','D1','',1000,0.05,'jNeuroML_NEURON',save=True)
+
+    elif '-twcA' in sys.argv:
+        main('TapWithdrawal','A','',1000,0.05,'jNeuroML_NEURON')
+    elif '-twcB' in sys.argv:
+        main('TapWithdrawal','B','',1000,0.05,'jNeuroML_NEURON')
+    elif '-twcC' in sys.argv:
+        main('TapWithdrawal','C','',1000,0.05,'jNeuroML_NEURON')
+    elif '-twcC1' in sys.argv:
+        main('TapWithdrawal','C1','',1000,0.05,'jNeuroML_NEURON')
+    elif '-twcD' in sys.argv:
+        main('TapWithdrawal','D','',1000,0.05,'jNeuroML_NEURON')
+    elif '-twcD1' in sys.argv:
+        main('TapWithdrawal','D1','',1000,0.05,'jNeuroML_NEURON')
         
     elif '-all' in sys.argv:
         print('Generating all plots')
