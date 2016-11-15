@@ -78,6 +78,12 @@ def process_args():
                         default=None,
                         help='List of cells to stimulate (default: all)')
 
+    parser.add_argument('-overrideconnpolarity',
+                        type=str,
+                        metavar='<override_conn_polarity>',
+                        default=None,
+                        help='Dict with connections to override with given polarity, e.g. {"AVAL-AVBR":"inh", ...}')
+
     parser.add_argument('-connnumberoverride',
                         type=str,
                         metavar='<conn-number-override>',
@@ -326,6 +332,7 @@ def generate(net_id,
              cells_to_plot = None,
              cells_to_stimulate = None,
              include_muscles=False,
+             override_conn_polarity=None,
              conn_number_override = None,
              conn_number_scaling = None,
              duration = 500,
@@ -658,15 +665,23 @@ def generate(net_id,
             # NeuroML Projection data structure
             proj_id = get_projection_id(conn.pre_cell, conn.post_cell, conn.synclass, conn.syntype)
 
+            polarity = None
+            if override_conn_polarity:
+                try:
+                    polarity = override_conn_polarity['%s-%s' % (conn.pre_cell, conn.post_cell)]
+                except KeyError:
+                    pass
+
             elect_conn = False
             analog_conn = False
             syn0 = params.neuron_to_neuron_exc_syn
-            if 'GABA' in conn.synclass:
+            if 'GABA' in conn.synclass or (polarity and polarity == 'inh'):
                 syn0 = params.neuron_to_neuron_inh_syn
-            if '_GJ' in conn.synclass:
+            if '_GJ' in conn.synclass or (polarity and polarity == 'exc'):
                 syn0 = params.neuron_to_neuron_elec_syn
                 elect_conn = isinstance(params.neuron_to_neuron_elec_syn, GapJunction)
-                
+
+
             if isinstance(syn0, GradedSynapse):
                 analog_conn = True
                 if len(nml_doc.silent_synapses)==0:
@@ -719,7 +734,7 @@ def generate(net_id,
                 proj0.electrical_connection_instances.append(conn0)
                 
             elif analog_conn:
-        
+
                 proj0 = ContinuousProjection(id=proj_id, \
                                    presynaptic_population=conn.pre_cell,
                                    postsynaptic_population=conn.post_cell)
@@ -902,6 +917,7 @@ def main():
              cells =                 args.cells,
              cells_to_plot =         args.cellstoplot,
              cells_to_stimulate =    args.cellstostimulate,
+             override_conn_polarity= args.override_conn_polarity,
              conn_number_override =  parse_dict_arg(args.connnumberoverride),
              conn_number_scaling =   parse_dict_arg(args.connnumberscaling),
              duration =              args.duration,
