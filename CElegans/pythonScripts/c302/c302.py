@@ -672,15 +672,29 @@ def generate(net_id,
                 except KeyError:
                     pass
 
+
             elect_conn = False
             analog_conn = False
+
             syn0 = params.neuron_to_neuron_exc_syn
-            if 'GABA' in conn.synclass or (polarity and polarity == 'inh'):
+            outstr = "'%s-%s':'exc'" % (conn.pre_cell, conn.post_cell)
+            if 'GABA' in conn.synclass:
                 syn0 = params.neuron_to_neuron_inh_syn
-            if '_GJ' in conn.synclass or (polarity and polarity == 'exc'):
+                outstr = "'%s-%s':'inh'" % (conn.pre_cell, conn.post_cell)
+            if '_GJ' in conn.synclass:
                 syn0 = params.neuron_to_neuron_elec_syn
                 elect_conn = isinstance(params.neuron_to_neuron_elec_syn, GapJunction)
+                outstr = "%s-%s GJ" % (conn.pre_cell, conn.post_cell)
 
+            if polarity and '_GJ' not in conn.synclass:
+                if polarity == 'inh':
+                    outstr = "%s -> inh" % outstr
+                    syn0 = params.neuron_to_neuron_inh_syn
+                else:
+                    outstr = "%s -> exc" % outstr
+                    syn0 = params.neuron_to_neuron_exc_syn
+                #print "%s-%s %s" % (conn.pre_cell, conn.post_cell, polarity)
+            print outstr
 
             if isinstance(syn0, GradedSynapse):
                 analog_conn = True
@@ -702,7 +716,7 @@ def generate(net_id,
                 print conn_number_scaling'''
 
             if number_syns != conn.number:
-                magnitude, unit = bioparameters.split_neuroml_quantity(syn0.gbase)
+                magnitude, unit = bioparameters.split_neuroml_quantity(syn0.conductance)
                 cond0 = "%s%s"%(magnitude*conn.number, unit)
                 cond1 = "%s%s"%(magnitude*number_syns, unit)
                 if verbose: 
