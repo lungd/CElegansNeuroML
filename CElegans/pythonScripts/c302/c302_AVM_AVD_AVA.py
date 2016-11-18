@@ -15,9 +15,9 @@ def setup(parameter_set,
 
     params.set_bioparameter("unphysiological_offset_current", "4.5pA", "Testing TapWithdrawal", "0")
     params.set_bioparameter("unphysiological_offset_current_del", "100 ms", "Testing TapWithdrawal", "0")
-    params.set_bioparameter("unphysiological_offset_current_dur", "800 ms", "Testing TapWithdrawal", "0")
+    params.set_bioparameter("unphysiological_offset_current_dur", "500 ms", "Testing TapWithdrawal", "0")
 
-    cells = ['AVM', 'AVDR', 'AVAR']
+    cells = ['AVM', 'AVDL', 'AVDR', 'AVAL', 'AVAR']
     cells_to_stimulate = ['AVM']
     cells_to_plot = cells
 
@@ -31,7 +31,20 @@ def setup(parameter_set,
                  cells_to_plot=cells_to_plot,
                  cells_to_stimulate=cells_to_stimulate,
                  override_conn_polarity={
+                     'AVM-AVDL':'inh',
+                     'AVM-AVDR':'inh',
+                     'AVAL-AVAR':'inh',
+                     'AVAL-AVDL':'inh',
+                     'AVAL-AVDR':'inh',
+                     'AVAR-AVAL':'inh',
+                     'AVAR-AVDL':'inh',
+                     'AVAR-AVDR':'inh',
+                     'AVDL-AVAL':'exc',
+                     'AVDL-AVAR':'exc',
+                     'AVDL-AVDR':'exc',
+                     'AVDR-AVAL':'exc',
                      'AVDR-AVAR':'exc',
+                     'AVDR-AVDL':'exc',
                  },
                  conn_number_override={
                  },
@@ -55,6 +68,6 @@ def setup(parameter_set,
              
 if __name__ == '__main__':
     
-    parameter_set = sys.argv[1] if len(sys.argv)==2 else 'C1'
+    parameter_set = sys.argv[1] if len(sys.argv)==2 else 'C2'
     
     setup(parameter_set, generate=True)

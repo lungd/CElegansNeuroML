@@ -15,10 +15,10 @@ def setup(parameter_set,
 
     params.set_bioparameter("unphysiological_offset_current", "4.5pA", "Testing TapWithdrawal", "0")
     params.set_bioparameter("unphysiological_offset_current_del", "100 ms", "Testing TapWithdrawal", "0")
-    params.set_bioparameter("unphysiological_offset_current_dur", "500 ms", "Testing TapWithdrawal", "0")
+    params.set_bioparameter("unphysiological_offset_current_dur", "800 ms", "Testing TapWithdrawal", "0")
 
-    cells = ['PLML', 'PLMR', 'PVCL', 'PVCR', 'AVBL', 'AVBR']
-    cells_to_stimulate = ['PLML', 'PLMR']
+    cells = ['PLML', 'PVCL', 'AVBL']
+    cells_to_stimulate = ['PLML']
     cells_to_plot = cells
 
     reference = "c302_%s_PLM_PVC_AVB"%parameter_set
@@ -30,9 +30,7 @@ def setup(parameter_set,
                  cells_to_plot=cells_to_plot,
                  cells_to_stimulate=cells_to_stimulate,
                  override_conn_polarity={
-                     'AVBL-PVCR':'inh',
-                     'AVBL-AVBR':'inh',
-                     'AVBR-AVBL':'inh',
+                     'PVCL-AVBL': 'exc',
                  },
                  conn_number_override={
                  },
