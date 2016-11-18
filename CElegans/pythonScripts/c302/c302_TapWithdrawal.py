@@ -25,23 +25,132 @@ def setup(parameter_set,
     cells_to_plot = ['AVAL', 'AVAR', 'AVBL', 'AVBR', 'PLML', 'PLMR', 'AVM']
 
     reference = "c302_%s_TapWithdrawal"%parameter_set
-    
+
     
     if generate:
         nml_doc = c302.generate(reference, 
                  params, 
                  cells=cells,
                  cells_to_plot=cells_to_plot,
-                 cells_to_stimulate=cells_to_stimulate, 
+                 cells_to_stimulate=cells_to_stimulate,
+                 override_conn_polarity={
+                     'ALML-ALML':'inh',
+                     'ALML-AVDR': 'inh',
+                     'ALML-PVCL': 'inh',
+                     'ALML-PVCR': 'inh',
+                     'ALMR-PVCR': 'inh',
+                     'AVAL-AVAR': 'inh',
+                     'AVAL-AVBL':'inh',
+                     'AVAL-AVBR': 'inh',
+                     'AVAL-AVDL': 'inh',
+                     'AVAL-AVDR': 'inh',
+                     'AVAL-PVCL': 'inh',
+                     'AVAL-PVCR': 'inh',
+                     'AVAR-AVAL': 'inh',
+                     'AVAR-AVBL': 'inh',
+                     'AVAR-AVBR': 'inh',
+                     'AVAR-AVDL': 'inh',
+                     'AVAR-AVDR': 'inh',
+                     'AVAR-PVCL': 'inh',
+                     'AVAR-PVCR': 'inh',
+                     'AVBL-AVAL': 'inh',
+                     'AVBL-AVAR': 'inh',
+                     'AVBL-AVBR': 'inh',
+                     'AVBL-AVDL': 'inh',
+                     'AVBL-AVDR': 'inh',
+                     'AVBL-DVA': 'inh',
+                     'AVBL-PVCR': 'inh',
+                     'AVBR-AVAL': 'inh',
+                     'AVBR-AVAR': 'inh',
+                     'AVBR-AVBL': 'inh',
+                     'AVBR-AVDL': 'inh',
+                     'AVDL-AVAL': 'exc', #
+                     'AVDL-AVAR': 'exc', #
+                     'AVDL-PVCL': 'exc', #
+                     'AVDR-AVAL': 'exc', #
+                     'AVDR-AVAR': 'exc', #
+                     'AVDR-AVBL': 'exc', #
+                     'AVDR-AVDL': 'exc', #
+                     'AVM-AVBL':  'inh',
+                     'AVM-AVBR':  'inh',
+                     'AVM-AVDL':'inh',
+                     'AVM-AVDR':'inh',
+                     'AVM-PVCL':  'inh',
+                     'AVM-PVCR':  'inh',
+                     'DVA-AVAL':  'inh',
+                     'DVA-AVAR':  'inh',
+                     'DVA-AVBL':  'inh',
+                     'DVA-AVBR':'inh',
+                     'DVA-AVDR':'inh',
+                     'DVA-PVCL':  'inh',
+                     'DVA-PVCR':  'inh',
+                     'PLMR-AVAL': 'inh',
+                     'PLMR-AVAR': 'inh',
+                     'PLMR-AVDL': 'inh',
+                     'PLMR-AVDR': 'inh',
+                     'PLMR-DVA':  'inh',
+                     'PLMR-PVCL': 'inh',
+                     'PVCL-AVAL': 'exc', #
+                     'PVCL-AVAR': 'exc', #
+                     'PVCL-AVBL': 'exc', #
+                     'PVCL-AVBR': 'exc', #
+                     'PVCL-AVDL': 'exc', #
+                     'PVCL-AVDR': 'exc', #
+                     'PVCL-DVA':  'exc', #
+                     'PVCL-PVCR': 'exc', #
+                     'PVCR-AVAL': 'exc', #
+                     'PVCR-AVAR': 'exc', #
+                     'PVCR-AVBL': 'exc', #
+                     'PVCR-AVBR': 'exc', #
+                     'PVCR-AVDL': 'exc', #
+                     'PVCR-AVDR': 'exc', #
+                     'PVCR-PVCL': 'exc', #
+                     'PVCR-PVDL': 'exc', #
+                     'PVDL-AVDL':'inh',
+                     'PVDL-AVDR':'inh',
+                     'PVDL-AVAL': 'inh',
+                     'PVDL-AVAR': 'inh',
+                     'PVDL-PVDR':'inh',
+                     'PVDL-PVCL': 'inh',
+                     'PVDL-PVCR': 'inh',
+                     'PVDR-AVAL': 'inh',
+                     'PVDR-AVAR': 'inh',
+                     'PVDR-AVDL':'inh',
+                     'PVDR-DVA':  'inh',
+                     'PVDR-PVCL': 'inh',
+                     'PVDR-PVCR': 'inh',
+                     'PVDR-PVDL': 'inh',
+
+                     },
+                 conn_number_override={
+                     #'PVCL-AVBL':100,
+                     #'PVCL-AVBR':100,
+                     #'PVCR-AVBL':100,
+                     #'PVCR-AVBR':100,
+                     #'PVCL-AVAL':1,
+                     #'PVCL-AVAR':1,
+
+                     #'DVA-AVBL':100,
+
+                     #'PLMR-PVCL':1,
+
+                     #'PVDR-PVCL':1,
+                     #'PVDR-PVCR':1,
+
+
+                 },
+                 include_muscles=False,
                  duration=2000,
-                 dt=0.1, 
+                 dt=0.05,
                  validate=(parameter_set!='B'),
                  target_directory = target_directory)
-                 
-        stim_amplitude = "5pA"
 
-        c302.add_new_input(nml_doc, "PLML", "100ms", "400ms", stim_amplitude, params)
-        c302.add_new_input(nml_doc, "PLMR", "100ms", "400ms", stim_amplitude, params)
+        stim_amplitude = "4.5pA"
+        #stim_amplitude = "5.135697186048022pA"
+
+        c302.add_new_input(nml_doc, "PLML", "100ms", "600ms", stim_amplitude, params)
+        c302.add_new_input(nml_doc, "PLMR", "100ms", "600ms", stim_amplitude, params)
+
         c302.add_new_input(nml_doc, "AVM", "1000ms", "400ms", stim_amplitude, params)
         
         nml_file = target_directory+'/'+reference+'.nml'
@@ -53,6 +162,6 @@ def setup(parameter_set,
              
 if __name__ == '__main__':
     
-    parameter_set = sys.argv[1] if len(sys.argv)==2 else 'A'
+    parameter_set = sys.argv[1] if len(sys.argv)==2 else 'C2'
     
     setup(parameter_set, generate=True)
