@@ -715,13 +715,12 @@ def generate(net_id,
                 print conn_number_override
                 print conn_number_scaling'''
 
-            if number_syns != conn.number and not isinstance(syn0, GapJunction):
-                quantity = None
-                if isinstance(syn0, ExpTwoSynapse):
-                    quantity = syn0.gbase
-                elif isinstance(syn0, GradedSynapse):
-                    quantity = syn0.conductance
-                magnitude, unit = bioparameters.split_neuroml_quantity(quantity)
+
+            if number_syns != conn.number:
+                if analog_conn:
+                    magnitude, unit = bioparameters.split_neuroml_quantity(syn0.conductance)
+                else:
+                    magnitude, unit = bioparameters.split_neuroml_quantity(syn0.gbase)
                 cond0 = "%s%s"%(magnitude*conn.number, unit)
                 cond1 = "%s%s"%(magnitude*number_syns, unit)
                 if verbose: 
@@ -831,7 +830,12 @@ def generate(net_id,
                 print conn_number_scaling'''
 
             if number_syns != conn.number:
-                magnitude, unit = bioparameters.split_neuroml_quantity(syn0.gbase)
+                
+                if analog_conn:
+                    magnitude, unit = bioparameters.split_neuroml_quantity(syn0.conductance)
+                else:
+                    magnitude, unit = bioparameters.split_neuroml_quantity(syn0.gbase)
+                    
                 cond0 = "%s%s"%(magnitude*conn.number, unit)
                 cond1 = "%s%s"%(magnitude*number_syns, unit)
                 if verbose: 
