@@ -43,7 +43,7 @@ except:
 
 import sys
 sys.path.append("..")
-import SpreadsheetDataReader
+import UpdatedSpreadsheetDataReader
 
 LEMS_TEMPLATE_FILE = "LEMS_c302_TEMPLATE.xml"
 
@@ -291,7 +291,7 @@ def get_cell_names_and_connection(test=False):
     
     spreadsheet_location = os.path.dirname(os.path.abspath(__file__))+"/../../../"
 
-    cell_names, conns = SpreadsheetDataReader.readDataFromSpreadsheet(include_nonconnected_cells=True)
+    cell_names, conns = UpdatedSpreadsheetDataReader.readDataFromSpreadsheet(include_nonconnected_cells=True)
 
     cell_names.sort()
     
@@ -299,10 +299,11 @@ def get_cell_names_and_connection(test=False):
 
 
 def get_cell_muscle_names_and_connection(test=False):
+    return [], [], []
     
     spreadsheet_location = os.path.dirname(os.path.abspath(__file__))+"/../../../"
 
-    mneurons, all_muscles, muscle_conns = SpreadsheetDataReader.readMuscleDataFromSpreadsheet()
+    mneurons, all_muscles, muscle_conns = UpdatedSpreadsheetDataReader.readMuscleDataFromSpreadsheet()
     
     return mneurons, all_muscles, muscle_conns
 
@@ -677,10 +678,10 @@ def generate(net_id,
             analog_conn = False
 
             syn0 = params.neuron_to_neuron_exc_syn
-            outstr = "'%s-%s':'exc'" % (conn.pre_cell, conn.post_cell)
+            outstr = "%s-%s exc" % (conn.pre_cell, conn.post_cell)
             if 'GABA' in conn.synclass:
                 syn0 = params.neuron_to_neuron_inh_syn
-                outstr = "'%s-%s':'inh'" % (conn.pre_cell, conn.post_cell)
+                outstr = "%s-%s inh" % (conn.pre_cell, conn.post_cell)
             if '_GJ' in conn.synclass:
                 syn0 = params.neuron_to_neuron_elec_syn
                 elect_conn = isinstance(params.neuron_to_neuron_elec_syn, GapJunction)
@@ -688,13 +689,12 @@ def generate(net_id,
 
             if polarity and '_GJ' not in conn.synclass:
                 if polarity == 'inh':
-                    outstr = "%s -> inh" % outstr
+                    outstr += '->inh'
                     syn0 = params.neuron_to_neuron_inh_syn
                 else:
-                    outstr = "%s -> exc" % outstr
+                    outstr += "->exc"
                     syn0 = params.neuron_to_neuron_exc_syn
                 #print "%s-%s %s" % (conn.pre_cell, conn.post_cell, polarity)
-            print outstr
 
             if isinstance(syn0, GradedSynapse):
                 analog_conn = True
@@ -715,11 +715,11 @@ def generate(net_id,
                 print conn_number_override
                 print conn_number_scaling'''
 
-            if number_syns != conn.number:
+            if number_syns != conn.number and not isinstance(syn0, GapJunction):
                 quantity = None
                 if isinstance(syn0, ExpTwoSynapse):
                     quantity = syn0.gbase
-                elif isinstance(syn0, GradedSynapse) or isinstance(syn0, GapJunction):
+                elif isinstance(syn0, GradedSynapse):
                     quantity = syn0.conductance
                 magnitude, unit = bioparameters.split_neuroml_quantity(quantity)
                 cond0 = "%s%s"%(magnitude*conn.number, unit)
@@ -728,8 +728,8 @@ def generate(net_id,
                     print_(">> Changing number of effective synapses connection %s -> %s: was: %s (total cond: %s), becomes %s (total cond: %s)" % \
                      (conn.pre_cell, conn.post_cell, conn.number, cond0, number_syns, cond1))
 
-
             syn_new = create_n_connection_synapse(syn0, number_syns, nml_doc, existing_synapses)
+            print "%s %s" % (outstr,number_syns)
 
             if elect_conn:
 
