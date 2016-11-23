@@ -705,9 +705,9 @@ def generate(net_id,
             number_syns = conn.number
             conn_shorthand = "%s-%s"%(conn.pre_cell, conn.post_cell)
 
-            if conn_number_override is not None and (conn_number_override.has_key(conn_shorthand)):
+            if conn_number_override is not None and (conn_number_override.has_key(conn_shorthand)) and '_GJ' not in conn.synclass:
                 number_syns = conn_number_override[conn_shorthand]
-            elif conn_number_scaling is not None and (conn_number_scaling.has_key(conn_shorthand)):
+            elif conn_number_scaling is not None and (conn_number_scaling.has_key(conn_shorthand)) and '_GJ' not in conn.synclass:
                 number_syns = conn.number*conn_number_scaling[conn_shorthand]
             '''
             else:
