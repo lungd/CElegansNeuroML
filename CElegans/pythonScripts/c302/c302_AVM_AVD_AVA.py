@@ -13,7 +13,7 @@ def setup(parameter_set,
     exec('from parameters_%s import ParameterisedModel'%parameter_set)
     params = ParameterisedModel()
 
-    params.set_bioparameter("unphysiological_offset_current", "4.5pA", "Testing TapWithdrawal", "0")
+    params.set_bioparameter("unphysiological_offset_current", "4pA", "Testing TapWithdrawal", "0")
     params.set_bioparameter("unphysiological_offset_current_del", "100 ms", "Testing TapWithdrawal", "0")
     params.set_bioparameter("unphysiological_offset_current_dur", "500 ms", "Testing TapWithdrawal", "0")
 

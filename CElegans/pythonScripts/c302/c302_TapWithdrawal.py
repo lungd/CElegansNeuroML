@@ -123,21 +123,25 @@ def setup(parameter_set,
 
                      },
                  conn_number_override={
-                     #'PVCL-AVBL':100,
-                     #'PVCL-AVBR':100,
-                     #'PVCR-AVBL':100,
-                     #'PVCR-AVBR':100,
-                     #'PVCL-AVAL':1,
-                     #'PVCL-AVAR':1,
+                     #'AVAL-PVCL':30, # 21
+                     #'AVAL-PVCR':28, # 16
+                     #'AVAR-PVCL':30, # 20
+                     #'AVAR-PVCR':30, # 20
 
-                     #'DVA-AVBL':100,
+                     #'AVBR-AVDL':20, # 4
 
-                     #'PLMR-PVCL':1,
+                     #'AVM-PVCL':20, # 10
+                     #'AVM-PVCR':30, # 17
 
-                     #'PVDR-PVCL':1,
-                     #'PVDR-PVCR':1,
-
-
+                     #'AVAL-AVBL':15, # 2
+                     #'AVAR-AVBL':15, # 3
+                     #'AVAR-AVBR':16, # 4
+                     #'AVBL-AVAL':18, # 9
+                     #'AVBL-AVAR':28, # 14
+                     #'AVBR-AVAL':20, # 10
+                     #'AVBR-AVAR':28, # 14                     
+ 
+                 
                  },
                  include_muscles=False,
                  duration=2000,
@@ -145,7 +149,7 @@ def setup(parameter_set,
                  validate=(parameter_set!='B'),
                  target_directory = target_directory)
 
-        stim_amplitude = "4.5pA"
+        stim_amplitude = "5pA"
         #stim_amplitude = "5.135697186048022pA"
 
         c302.add_new_input(nml_doc, "PLML", "100ms", "600ms", stim_amplitude, params)

@@ -3,24 +3,24 @@ import sys
     
 def setup(parameter_set, 
           generate=False,
-          duration=1000, 
+          duration=2500,
           dt=0.05,
           target_directory='examples'):
 
     exec('from parameters_%s import ParameterisedModel'%parameter_set)
     params = ParameterisedModel()
     
-    params.set_bioparameter("unphysiological_offset_current", "5pA", "Testing IClamp", "0")
+    params.set_bioparameter("unphysiological_offset_current", "2pA", "Testing IClamp", "0")
     params.set_bioparameter("unphysiological_offset_current_del", "100 ms", "Testing IClamp", "0")
-    params.set_bioparameter("unphysiological_offset_current_dur", "800 ms", "Testing IClamp", "0")
+    params.set_bioparameter("unphysiological_offset_current_dur", "2000 ms", "Testing IClamp", "0")
     
     
-    my_cells = ["ADAL","PVCL","MDR1"]
-    my_cells = ["ADAL","PVCL"]
+    my_cells = ["AVM",]
+    my_cells = ["AVM"]
     include_muscles = False
     
     cells               = my_cells
-    cells_to_stimulate  = my_cells
+    cells_to_stimulate  = ["AVM"]
     
     reference = "c302_%s_IClamp"%parameter_set
     

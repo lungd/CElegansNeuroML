@@ -35,6 +35,8 @@ def setup(parameter_set,
                      'AVBR-AVBL':'inh',
                  },
                  conn_number_override={
+                     'AVBL-PVCR':2,
+
                  },
                  include_muscles=False,
                  duration=duration,

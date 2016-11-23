@@ -57,45 +57,45 @@ class ParameterisedModel(c302ModelPrototype):
         self.add_bioparameter("neuron_spike_thresh", "-20 mV", "BlindGuess", "0.1")
 
         self.add_bioparameter("muscle_leak_cond_density", "0.005 mS_per_cm2", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_leak_cond_density", "0.0003 mS_per_cm2", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_leak_cond_density", "0.002 mS_per_cm2", "BlindGuess", "0.2")
 
         self.add_bioparameter("leak_erev", "-50 mV", "BlindGuess", "0.1")
 
         self.add_bioparameter("muscle_k_slow_cond_density", "0.1408257307011203 mS_per_cm2", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_k_slow_cond_density", "0.7033751019872582 mS_per_cm2", "BlindGuess", "0.2")
-        self.add_bioparameter("k_slow_erev", "-60 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_k_slow_cond_density", "1.55833751019872582 mS_per_cm2", "BlindGuess", "0.2")
+        self.add_bioparameter("k_slow_erev", "-50 mV", "BlindGuess", "0.1")
 
         self.add_bioparameter("muscle_k_fast_cond_density", "0.005 mS_per_cm2", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_k_fast_cond_density", "0.0021643917483308 mS_per_cm2", "BlindGuess", "0.2")
-        self.add_bioparameter("k_fast_erev", "-60 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_k_fast_cond_density", "0.51711643917483308 mS_per_cm2", "BlindGuess", "0.2")
+        self.add_bioparameter("k_fast_erev", "-80 mV", "BlindGuess", "0.1")
 
         self.add_bioparameter("muscle_ca_boyle_cond_density", "1.7139140434941569 mS_per_cm2", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_ca_boyle_cond_density", "0.5502775772264702 mS_per_cm2", "BlindGuess", "0.2")
+        self.add_bioparameter("neuron_ca_boyle_cond_density", "1.212775772264702 mS_per_cm2", "BlindGuess", "0.2")
+
+        self.add_bioparameter("ca_boyle_erev", "00 mV", "BlindGuess", "0.1")
         
-        self.add_bioparameter("ca_boyle_erev", "40 mV", "BlindGuess", "0.1")
-        
-        self.add_bioparameter("ca_conc_decay_time", "10.811870945509265 ms", "BlindGuess", "0.2")
+        self.add_bioparameter("ca_conc_decay_time", "13.811870945509265 ms", "BlindGuess", "0.1")
         self.add_bioparameter("ca_conc_rho", "0.000238919 mol_per_m_per_A_per_s", "BlindGuess", "0.1")
 
 
-        self.add_bioparameter("neuron_to_neuron_exc_syn_conductance", "0.11 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_neuron_exc_syn_conductance", "0.09 nS", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_muscle_exc_syn_conductance", "0.09 nS", "BlindGuess", "0.1")
         
         self.add_bioparameter("exc_syn_delta", "5 mV", "BlindGuess", "0.1")
         self.add_bioparameter("exc_syn_vth", "0 mV", "BlindGuess", "0.1")
-        self.add_bioparameter("exc_syn_erev", "0 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("exc_syn_erev", "10 mV", "BlindGuess", "0.1")
         self.add_bioparameter("exc_syn_k", "0.025per_ms", "BlindGuess", "0.1")
 
-        self.add_bioparameter("neuron_to_neuron_inh_syn_conductance", "0.15 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_neuron_inh_syn_conductance", "0.09 nS", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_muscle_inh_syn_conductance", "0.09 nS", "BlindGuess", "0.1")
         
         self.add_bioparameter("inh_syn_delta", "5 mV", "BlindGuess", "0.1")
         self.add_bioparameter("inh_syn_vth", "0 mV", "BlindGuess", "0.1")
-        self.add_bioparameter("inh_syn_erev", "-70 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("inh_syn_erev", "-60 mV", "BlindGuess", "0.1")
         self.add_bioparameter("inh_syn_k", "0.025per_ms", "BlindGuess", "0.1")
         
 
-        self.add_bioparameter("neuron_to_neuron_elec_syn_gbase", "0.028 nS", "BlindGuess", "0.2")
+        self.add_bioparameter("neuron_to_neuron_elec_syn_gbase", "0.09 nS", "BlindGuess", "0.2")
         self.add_bioparameter("neuron_to_muscle_elec_syn_gbase", "0.00052 nS", "BlindGuess", "0.1")
 
         self.add_bioparameter("unphysiological_offset_current", "5.135697186048022 pA", "KnownError", "0")
