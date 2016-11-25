@@ -234,14 +234,14 @@ def get_random_colour_hex():
 def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
 
     new_id = "%s_%sconns"%(prototype_syn.id, str(n).replace('.', '_'))
-    
+
     if isinstance(prototype_syn, ExpTwoSynapse):
         new_id = "%s"%(prototype_syn.id)
 
     if not existing_synapses.has_key(new_id):
 
         if isinstance(prototype_syn, ExpTwoSynapse):
-            
+
             new_syn = ExpTwoSynapse(id=new_id,
                                 gbase =       prototype_syn.gbase,
                                 erev =        prototype_syn.erev,
@@ -704,11 +704,17 @@ def generate(net_id,
 
             number_syns = conn.number
             conn_shorthand = "%s-%s"%(conn.pre_cell, conn.post_cell)
+            gap_conn_shorthand = "%s-%s_%s"%(conn.pre_cell, conn.post_cell, "GJ")
 
-            if conn_number_override is not None and (conn_number_override.has_key(conn_shorthand)) and '_GJ' not in conn.synclass:
+            if conn_number_override is not None and (conn_number_override.has_key(conn_shorthand)):
                 number_syns = conn_number_override[conn_shorthand]
-            elif conn_number_scaling is not None and (conn_number_scaling.has_key(conn_shorthand)) and '_GJ' not in conn.synclass:
+            elif conn_number_scaling is not None and (conn_number_scaling.has_key(conn_shorthand)):
                 number_syns = conn.number*conn_number_scaling[conn_shorthand]
+            elif conn_number_override and "_GJ" in conn.synclass and conn_number_override.has_key(gap_conn_shorthand):
+                number_syns = conn_number_override[gap_conn_shorthand]
+            elif conn_number_scaling and "_GJ" in conn.synclass and conn_number_override.has_key(gap_conn_shorthand):
+                number_syns = conn.number*conn_number_scaling[gap_conn_shorthand]
+
             '''
             else:
                 print conn_shorthand
@@ -717,7 +723,7 @@ def generate(net_id,
 
 
             if number_syns != conn.number:
-                if analog_conn:
+                if analog_conn or "_GJ" in conn.synclass:
                     magnitude, unit = bioparameters.split_neuroml_quantity(syn0.conductance)
                 else:
                     magnitude, unit = bioparameters.split_neuroml_quantity(syn0.gbase)
