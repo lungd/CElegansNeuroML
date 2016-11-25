@@ -22,8 +22,8 @@ def setup(parameter_set,
     #cells_to_stimulate = ['PLML', 'PLMR']
     #cells_to_stimulate = ['AVM']
 
-    cells_to_plot = ['AVAL', 'AVAR', 'AVBL', 'AVBR', 'PLML', 'PLMR', 'AVM']
-
+    cells_to_plot = ['AVAL', 'AVAR', 'AVBL', 'AVBR', 'PLML', 'PLMR', 'AVM', 'PVCL', 'PVCR', 'PVDL', 'PVDR', 'DVA']
+    #cells_to_plot = cells
     reference = "c302_%s_TapWithdrawal"%parameter_set
 
     
@@ -34,6 +34,7 @@ def setup(parameter_set,
                  cells_to_plot=cells_to_plot,
                  cells_to_stimulate=cells_to_stimulate,
                  override_conn_polarity={
+                     # connections from herm_full_edgelist
                      'ALML-ALML':'inh',
                      'ALML-AVDR': 'inh',
                      'ALML-PVCL': 'inh',
@@ -66,11 +67,13 @@ def setup(parameter_set,
                      'AVBR-AVDL': 'inh',
                      'AVDL-AVAL': 'exc', #
                      'AVDL-AVAR': 'exc', #
+                     'AVDL-AVDR': 'exc', #
                      'AVDL-PVCL': 'exc', #
                      'AVDR-AVAL': 'exc', #
                      'AVDR-AVAR': 'exc', #
                      'AVDR-AVBL': 'exc', #
                      'AVDR-AVDL': 'exc', #
+                     'AVDR-PVCR': 'exc', #
                      'AVM-AVBL':  'inh',
                      'AVM-AVBR':  'inh',
                      'AVM-AVDL':'inh',
@@ -97,6 +100,7 @@ def setup(parameter_set,
                      'PVCL-AVDL': 'exc', #
                      'PVCL-AVDR': 'exc', #
                      'PVCL-DVA':  'exc', #
+                     'PVCL-PVCL': 'exc', #
                      'PVCL-PVCR': 'exc', #
                      'PVCR-AVAL': 'exc', #
                      'PVCR-AVAR': 'exc', #
@@ -104,8 +108,10 @@ def setup(parameter_set,
                      'PVCR-AVBR': 'exc', #
                      'PVCR-AVDL': 'exc', #
                      'PVCR-AVDR': 'exc', #
+                     'PVCR-DVA':  'exc', #
                      'PVCR-PVCL': 'exc', #
                      'PVCR-PVDL': 'exc', #
+                     'PVCR-PVDR': 'exc', #
                      'PVDL-AVDL':'inh',
                      'PVDL-AVDR':'inh',
                      'PVDL-AVAL': 'inh',
@@ -120,9 +126,57 @@ def setup(parameter_set,
                      'PVDR-PVCL': 'inh',
                      'PVDR-PVCR': 'inh',
                      'PVDR-PVDL': 'inh',
+                     
+                     #connections from CElegansNeuronTable
+                     #'PVCL-AVAL':'inh',
+                     #'PVCL-AVAR':'inh',
+                     #'PVCR-AVAL':'inh',
+                     #'PVCR-AVAR':'inh',
+
+                     #'PVCL-AVDL':'inh',
+                     #'PVCL-AVDR':'inh',
+                     #'PVCR-AVDL':'inh',
+                     #'PVCR-AVDR':'inh',
+
+                     #'AVDR-AVBL':'inh',
+
+                     #'AVM-PVCL':'exc',
+                     #'AVM-PVCR':'exc',
+
+                     #'ALML-PVCL':'exc',
+                     #'ALML-PVCR':'exc',
+                     #'ALMR-PVCR':'exc',
 
                      },
                  conn_number_override={
+                     #'PVCL-AVAL_GJ':2*0.05, # 2
+                     #'AVAL-PVCL_GJ':2*0.05, # 2
+
+                     #'PVCR-AVAL_GJ':5*0.05, # 5
+                     #'AVAL-PVCR_GJ':5*0.05, # 5
+
+                     #'PVCR-AVAR_GJ':3*0.05, # 3
+                     #'AVAR-PVCR_GJ':3*0.05, # 3
+
+                     ##'DVA-AVAL_GJ':3, # 3
+		     ##'DVA-AVAR_GJ':1, # 1
+
+		     #'PVCL-AVBL':5*10, # 5
+		     #'PVCL-AVBR':12*10, # 12
+		     #'PVCR-AVBL':8*10, # 8
+		     #'PVCR-AVBR':6*10, # 6
+
+                     #'AVDL-AVAL':13*5,
+                     #'AVDL-AVAL':19*5,
+                     #'AVDR-AVAL':16*5,
+                     #'AVDR-AVAR':15*5,
+
+
+
+
+
+
+
                      #'AVAL-PVCL':30, # 21
                      #'AVAL-PVCR':28, # 16
                      #'AVAR-PVCL':30, # 20
@@ -149,7 +203,7 @@ def setup(parameter_set,
                  validate=(parameter_set!='B'),
                  target_directory = target_directory)
 
-        stim_amplitude = "5pA"
+        stim_amplitude = "7pA"
         #stim_amplitude = "5.135697186048022pA"
 
         c302.add_new_input(nml_doc, "PLML", "100ms", "600ms", stim_amplitude, params)

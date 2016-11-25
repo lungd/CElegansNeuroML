@@ -78,20 +78,20 @@ class ParameterisedModel(c302ModelPrototype):
         self.add_bioparameter("ca_conc_rho", "0.000238919 mol_per_m_per_A_per_s", "BlindGuess", "0.1")
 
 
-        self.add_bioparameter("neuron_to_neuron_exc_syn_conductance", "0.09 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_neuron_exc_syn_conductance", "0.19 nS", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_muscle_exc_syn_conductance", "0.09 nS", "BlindGuess", "0.1")
         
         self.add_bioparameter("exc_syn_delta", "5 mV", "BlindGuess", "0.1")
         self.add_bioparameter("exc_syn_vth", "0 mV", "BlindGuess", "0.1")
-        self.add_bioparameter("exc_syn_erev", "10 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("exc_syn_erev", "00 mV", "BlindGuess", "0.1")
         self.add_bioparameter("exc_syn_k", "0.025per_ms", "BlindGuess", "0.1")
 
-        self.add_bioparameter("neuron_to_neuron_inh_syn_conductance", "0.09 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_neuron_inh_syn_conductance", "0.45 nS", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_muscle_inh_syn_conductance", "0.09 nS", "BlindGuess", "0.1")
         
         self.add_bioparameter("inh_syn_delta", "5 mV", "BlindGuess", "0.1")
         self.add_bioparameter("inh_syn_vth", "0 mV", "BlindGuess", "0.1")
-        self.add_bioparameter("inh_syn_erev", "-60 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("inh_syn_erev", "-70 mV", "BlindGuess", "0.1")
         self.add_bioparameter("inh_syn_k", "0.025per_ms", "BlindGuess", "0.1")
         
 
