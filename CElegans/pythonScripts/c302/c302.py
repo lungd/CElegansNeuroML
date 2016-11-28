@@ -233,7 +233,10 @@ def get_random_colour_hex():
 
 def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
 
-    new_id = "%s_%sconns"%(prototype_syn.id, str(n).replace('.', '_'))
+    if type(n) is float:
+        new_id = "%s_%sconns"%(prototype_syn.id, '{0:.80f}'.format(n).replace('.', '_'))
+    else: # int
+        new_id = "%s_%sconns"%(prototype_syn.id, str(n).replace('.', '_'))
 
     if isinstance(prototype_syn, ExpTwoSynapse):
         new_id = "%s"%(prototype_syn.id)
@@ -253,16 +256,23 @@ def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
 
         elif isinstance(prototype_syn, GapJunction):
             magnitude, unit = bioparameters.split_neuroml_quantity(prototype_syn.conductance)
+            if type(n) is float:
+                cond = "%s%s"%('{0:.80f}'.format(magnitude*n), unit)
+            else:
+                cond = "%s%s"%(magnitude*n, unit)
             new_syn = GapJunction(id=new_id,
-                                  conductance =       "%s%s"%(magnitude*n, unit))
-
+                                  conductance =       cond)
             existing_synapses[new_id] = new_syn
             nml_doc.gap_junctions.append(new_syn)
 
         elif isinstance(prototype_syn, GradedSynapse):
             magnitude, unit = bioparameters.split_neuroml_quantity(prototype_syn.conductance)
+            if type(n) is float:
+                cond = "%s%s"%('{0:.80f}'.format(magnitude*n), unit)
+            else:
+                cond = "%s%s"%(magnitude*n, unit)
             new_syn = GradedSynapse(id=new_id,
-                                    conductance =       "%s%s"%(magnitude*n, unit),
+                                    conductance =       cond,
                                     delta =             prototype_syn.delta,
                                     Vth =               prototype_syn.Vth,
                                     erev =              prototype_syn.erev,
