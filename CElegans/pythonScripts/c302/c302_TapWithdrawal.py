@@ -22,7 +22,7 @@ def setup(parameter_set,
     #cells_to_stimulate = ['PLML', 'PLMR']
     #cells_to_stimulate = ['AVM']
 
-    cells_to_plot = ['AVAL', 'AVAR', 'AVBL', 'AVBR', 'PLML', 'PLMR', 'AVM', 'PVCL', 'PVCR', 'PVDL', 'PVDR', 'DVA']
+    cells_to_plot = ['AVAL', 'AVAR', 'AVBL', 'AVBR', 'PLML', 'PLMR', 'AVM']
     #cells_to_plot = cells
     reference = "c302_%s_TapWithdrawal"%parameter_set
 
@@ -34,168 +34,100 @@ def setup(parameter_set,
                  cells_to_plot=cells_to_plot,
                  cells_to_stimulate=cells_to_stimulate,
                  override_conn_polarity={
-                     # connections from herm_full_edgelist
-                     'ALML-ALML':'inh',
-                     'ALML-AVDR': 'inh',
-                     'ALML-PVCL': 'inh',
-                     'ALML-PVCR': 'inh',
-                     'ALMR-PVCR': 'inh',
-                     'AVAL-AVAR': 'inh',
-                     'AVAL-AVBL':'inh',
-                     'AVAL-AVBR': 'inh',
-                     'AVAL-AVDL': 'inh',
-                     'AVAL-AVDR': 'inh',
-                     'AVAL-PVCL': 'inh',
-                     'AVAL-PVCR': 'inh',
-                     'AVAR-AVAL': 'inh',
-                     'AVAR-AVBL': 'inh',
-                     'AVAR-AVBR': 'inh',
-                     'AVAR-AVDL': 'inh',
-                     'AVAR-AVDR': 'inh',
-                     'AVAR-PVCL': 'inh',
-                     'AVAR-PVCR': 'inh',
-                     'AVBL-AVAL': 'inh',
-                     'AVBL-AVAR': 'inh',
-                     'AVBL-AVBR': 'inh',
-                     'AVBL-AVDL': 'inh',
-                     'AVBL-AVDR': 'inh',
-                     'AVBL-DVA': 'inh',
-                     'AVBL-PVCR': 'inh',
-                     'AVBR-AVAL': 'inh',
-                     'AVBR-AVAR': 'inh',
-                     'AVBR-AVBL': 'inh',
-                     'AVBR-AVDL': 'inh',
-                     'AVDL-AVAL': 'exc', #
-                     'AVDL-AVAR': 'exc', #
-                     'AVDL-AVDR': 'exc', #
-                     'AVDL-PVCL': 'exc', #
-                     'AVDR-AVAL': 'exc', #
-                     'AVDR-AVAR': 'exc', #
-                     'AVDR-AVBL': 'exc', #
-                     'AVDR-AVDL': 'exc', #
-                     'AVDR-PVCR': 'exc', #
-                     'AVM-AVBL':  'inh',
-                     'AVM-AVBR':  'inh',
-                     'AVM-AVDL':'inh',
-                     'AVM-AVDR':'inh',
-                     'AVM-PVCL':  'inh',
-                     'AVM-PVCR':  'inh',
-                     'DVA-AVAL':  'inh',
-                     'DVA-AVAR':  'inh',
-                     'DVA-AVBL':  'inh',
-                     'DVA-AVBR':'inh',
-                     'DVA-AVDR':'inh',
-                     'DVA-PVCL':  'inh',
-                     'DVA-PVCR':  'inh',
-                     'PLMR-AVAL': 'inh',
-                     'PLMR-AVAR': 'inh',
-                     'PLMR-AVDL': 'inh',
-                     'PLMR-AVDR': 'inh',
-                     'PLMR-DVA':  'inh',
-                     'PLMR-PVCL': 'inh',
-                     'PVCL-AVAL': 'exc', #
-                     'PVCL-AVAR': 'exc', #
-                     'PVCL-AVBL': 'exc', #
-                     'PVCL-AVBR': 'exc', #
-                     'PVCL-AVDL': 'exc', #
-                     'PVCL-AVDR': 'exc', #
-                     'PVCL-DVA':  'exc', #
-                     'PVCL-PVCL': 'exc', #
-                     'PVCL-PVCR': 'exc', #
-                     'PVCR-AVAL': 'exc', #
-                     'PVCR-AVAR': 'exc', #
-                     'PVCR-AVBL': 'exc', #
-                     'PVCR-AVBR': 'exc', #
-                     'PVCR-AVDL': 'exc', #
-                     'PVCR-AVDR': 'exc', #
-                     'PVCR-DVA':  'exc', #
-                     'PVCR-PVCL': 'exc', #
-                     'PVCR-PVDL': 'exc', #
-                     'PVCR-PVDR': 'exc', #
-                     'PVDL-AVDL':'inh',
-                     'PVDL-AVDR':'inh',
-                     'PVDL-AVAL': 'inh',
-                     'PVDL-AVAR': 'inh',
-                     'PVDL-PVDR':'inh',
-                     'PVDL-PVCL': 'inh',
-                     'PVDL-PVCR': 'inh',
-                     'PVDR-AVAL': 'inh',
-                     'PVDR-AVAR': 'inh',
-                     'PVDR-AVDL':'inh',
-                     'PVDR-DVA':  'inh',
-                     'PVDR-PVCL': 'inh',
-                     'PVDR-PVCR': 'inh',
-                     'PVDR-PVDL': 'inh',
-                     
-                     #connections from CElegansNeuronTable
-                     #'PVCL-AVAL':'inh',
-                     #'PVCL-AVAR':'inh',
-                     #'PVCR-AVAL':'inh',
-                     #'PVCR-AVAR':'inh',
+                    'ALML-ALML':'inh',
+                    'ALML-PVCL':'inh',
+                    'ALML-PVCR':'inh',
+                    'ALML-AVDR':'inh',
+                    'ALMR-PVCR':'inh',
 
-                     #'PVCL-AVDL':'inh',
-                     #'PVCL-AVDR':'inh',
-                     #'PVCR-AVDL':'inh',
-                     #'PVCR-AVDR':'inh',
+                    'AVM-PVCL':'inh',
+                    'AVM-PVCR':'inh',
+                    'AVM-AVBL':'inh',
+                    'AVM-AVBR':'inh',
+                    'AVM-AVDL':'inh',
+                    'AVM-AVDR':'inh',
 
-                     #'AVDR-AVBL':'inh',
+                    'PVDL-PVDR':'inh',
+                    'PVDL-PVCL':'inh',
+                    'PVDL-PVCR':'inh',
+                    'PVDL-AVAL':'inh',
+                    'PVDL-AVAR':'inh',
+                    'PVDL-AVDL':'inh',
+                    'PVDL-AVDR':'inh',
+                    'PVDR-PVDL':'inh',
+                    'PVDR-DVA':'inh',
+                    'PVDR-PVCL':'inh',
+                    'PVDR-PVCR':'inh',
+                    'PVDR-AVAL':'inh',
+                    'PVDR-AVAR':'inh',
+                    'PVDR-AVDL':'inh',
 
-                     #'AVM-PVCL':'exc',
-                     #'AVM-PVCR':'exc',
+                    'DVA-PVCL':'inh',
+                    'DVA-PVCR':'inh',
+                    'DVA-AVAL':'inh',
+                    'DVA-AVAR':'inh',
+                    'DVA-AVBL':'inh',
+                    'DVA-AVBR':'inh',
+                    'DVA-AVDR':'inh',
 
-                     #'ALML-PVCL':'exc',
-                     #'ALML-PVCR':'exc',
-                     #'ALMR-PVCR':'exc',
+                    'PVCL-DVA':'exc',
+                    'PVCL-PVCL':'exc',
+                    'PVCL-PVCR':'exc',
+                    'PVCL-AVAL':'exc',
+                    'PVCL-AVAR':'exc',
+                    'PVCL-AVBL':'exc',
+                    'PVCL-AVBR':'exc',
+                    'PVCL-AVDL':'exc',
+                    'PVCL-AVDR':'exc',
+                    'PVCR-PVDL':'exc',
+                    'PVCR-PVDR':'exc',
+                    'PVCR-DVA':'exc',
+                    'PVCR-PVCL':'exc',
+                    'PVCR-AVAL':'exc',
+                    'PVCR-AVAR':'exc',
+                    'PVCR-AVBL':'exc',
+                    'PVCR-AVBR':'exc',
+                    'PVCR-AVDL':'exc',
+                    'PVCR-AVDR':'exc',
 
-                     },
+                    'AVAL-PVCL':'inh',
+                    'AVAL-PVCR':'inh',
+                    'AVAL-AVAR':'inh',
+                    'AVAL-AVBL':'inh',
+                    'AVAL-AVDL':'inh',
+                    'AVAL-AVDR':'inh',
+
+                    'AVAR-PVCL':'inh',
+                    'AVAR-PVCR':'inh',
+                    'AVAR-AVAL':'inh',
+                    'AVAR-AVBL':'inh',
+                    'AVAR-AVBR':'inh',
+                    'AVAR-AVDL':'inh',
+                    'AVAR-AVDR':'inh',
+
+                    'AVBL-DVA':'inh',
+                    'AVBL-PVCR':'inh',
+                    'AVBL-AVAL':'inh',
+                    'AVBL-AVAR':'inh',
+                    'AVBL-AVBR':'inh',
+                    'AVBL-AVDR':'inh',
+                    'AVBR-AVAL':'inh',
+                    'AVBR-AVAR':'inh',
+                    'AVBR-AVBL':'inh',
+                    'AVBR-AVDL':'inh',
+
+                    'AVDL-PVCL':'exc',
+                    'AVDL-AVAL':'exc',
+                    'AVDL-AVAR':'exc',
+                    'AVDL-AVDR':'exc',
+                    'AVDR-PVCR':'exc',
+                    'AVDR-AVAL':'exc',
+                    'AVDR-AVAR':'exc',
+                    'AVDR-AVBL':'exc',
+                    'AVDR-AVDL':'exc',
+                 },
                  conn_number_override={
-                     #'PVCL-AVAL_GJ':2*0.05, # 2
-                     #'AVAL-PVCL_GJ':2*0.05, # 2
-
-                     #'PVCR-AVAL_GJ':5*0.05, # 5
-                     #'AVAL-PVCR_GJ':5*0.05, # 5
-
-                     #'PVCR-AVAR_GJ':3*0.05, # 3
-                     #'AVAR-PVCR_GJ':3*0.05, # 3
-
-                     ##'DVA-AVAL_GJ':3, # 3
-		     ##'DVA-AVAR_GJ':1, # 1
-
-		     #'PVCL-AVBL':5*10, # 5
-		     #'PVCL-AVBR':12*10, # 12
-		     #'PVCR-AVBL':8*10, # 8
-		     #'PVCR-AVBR':6*10, # 6
-
-                     #'AVDL-AVAL':13*5,
-                     #'AVDL-AVAL':19*5,
-                     #'AVDR-AVAL':16*5,
-                     #'AVDR-AVAR':15*5,
-
-
-
-
-
-
-
-                     #'AVAL-PVCL':30, # 21
-                     #'AVAL-PVCR':28, # 16
-                     #'AVAR-PVCL':30, # 20
-                     #'AVAR-PVCR':30, # 20
-
-                     #'AVBR-AVDL':20, # 4
-
-                     #'AVM-PVCL':20, # 10
-                     #'AVM-PVCR':30, # 17
-
-                     #'AVAL-AVBL':15, # 2
-                     #'AVAR-AVBL':15, # 3
-                     #'AVAR-AVBR':16, # 4
-                     #'AVBL-AVAL':18, # 9
-                     #'AVBL-AVAR':28, # 14
-                     #'AVBR-AVAL':20, # 10
-                     #'AVBR-AVAR':28, # 14                     
- 
-                 
+                    'AVAR-AVBL_GJ':3*0.0000000000001,
                  },
                  include_muscles=False,
                  duration=2000,
