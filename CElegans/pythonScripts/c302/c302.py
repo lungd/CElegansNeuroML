@@ -712,7 +712,7 @@ def generate(net_id,
                 number_syns = conn.number*conn_number_scaling[conn_shorthand]
             elif conn_number_override and "_GJ" in conn.synclass and conn_number_override.has_key(gap_conn_shorthand):
                 number_syns = conn_number_override[gap_conn_shorthand]
-            elif conn_number_scaling and "_GJ" in conn.synclass and conn_number_override.has_key(gap_conn_shorthand):
+            elif conn_number_scaling and "_GJ" in conn.synclass and conn_number_scaling.has_key(gap_conn_shorthand):
                 number_syns = conn.number*conn_number_scaling[gap_conn_shorthand]
 
             '''
