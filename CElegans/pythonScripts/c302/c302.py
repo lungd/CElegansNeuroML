@@ -677,12 +677,8 @@ def generate(net_id,
             proj_id = get_projection_id(conn.pre_cell, conn.post_cell, conn.synclass, conn.syntype)
 
             polarity = None
-            if override_conn_polarity:
-                try:
-                    polarity = override_conn_polarity['%s-%s' % (conn.pre_cell, conn.post_cell)]
-                except KeyError:
-                    pass
-
+            if override_conn_polarity and override_conn_polarity.has_key('%s-%s' % (conn.pre_cell, conn.post_cell)):
+                polarity = override_conn_polarity['%s-%s' % (conn.pre_cell, conn.post_cell)]
 
             elect_conn = False
             analog_conn = False
@@ -714,16 +710,14 @@ def generate(net_id,
 
             number_syns = conn.number
             conn_shorthand = "%s-%s"%(conn.pre_cell, conn.post_cell)
-            gap_conn_shorthand = "%s-%s_%s"%(conn.pre_cell, conn.post_cell, "GJ")
-
-            if conn_number_override is not None and (conn_number_override.has_key(conn_shorthand)):
+            
+            if "_GJ" in conn.synclass:
+                conn_shorthand = "%s-%s_%s"%(conn.pre_cell, conn.post_cell, "GJ")
+          
+            if conn_number_override and conn_number_override.has_key(conn_shorthand):
                 number_syns = conn_number_override[conn_shorthand]
-            elif conn_number_scaling is not None and (conn_number_scaling.has_key(conn_shorthand)):
+            elif conn_number_scaling and conn_number_scaling.has_key(conn_shorthand):
                 number_syns = conn.number*conn_number_scaling[conn_shorthand]
-            elif conn_number_override and "_GJ" in conn.synclass and conn_number_override.has_key(gap_conn_shorthand):
-                number_syns = conn_number_override[gap_conn_shorthand]
-            elif conn_number_scaling and "_GJ" in conn.synclass and conn_number_scaling.has_key(gap_conn_shorthand):
-                number_syns = conn.number*conn_number_scaling[gap_conn_shorthand]
 
             '''
             else:
