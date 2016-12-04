@@ -7,14 +7,12 @@
 '''
 
 from neurotune import optimizers
-from neurotune import evaluators
 from neurotune import utils
 from matplotlib import pyplot as plt
 from pyelectro import analysis
 
 import sys
 import os
-import shutil
 import os.path
 import time
 import c302Evaluators
@@ -37,6 +35,28 @@ import c302_utils
 from C302Controller import C302Controller
 
 
+parameters_B = ['neuron_to_neuron_chem_exc_syn_gbase',
+                'neuron_to_neuron_chem_inh_syn_gbase',
+                'neuron_to_neuron_elec_syn_gbase',
+                'chem_exc_syn_decay',
+                'chem_inh_syn_decay',
+                'unphysiological_offset_current']
+
+#above parameters will not be modified outside these bounds:
+min_constraints_B = [0.005, 0.005, 0.001,   3,    3,     2]
+max_constraints_B = [0.03,  0.03,  0.02,  20,   50,    6]
+
+weights_B = {}
+target_data_B = {}
+
+for cell in ['DB1','VB1', 'DB3','VB3' , 'DB5','VB5', 'DB7','VB7']:
+    var = '%s/0/generic_neuron_iaf_cell/v:mean_spike_frequency'%cell
+    weights_B[var] = 1
+    target_data_B[var] = 50
+    var = '%s/0/generic_neuron_iaf_cell/v:average_minimum'%cell
+    weights_B[var] = 1
+    target_data_B[var] = -50
+    
 
 parameters_C_based_neuron = ['neuron_leak_cond_density',
               'neuron_k_slow_cond_density',
@@ -74,6 +94,47 @@ max_constraints_net_loose = [.1,  .1,  0.01,   .1,  .1]
 min_constraints_net_tight = [0.09, 0.09, 0.00048, 0.09, 0.09]
 max_constraints_net_tight = [0.11, 0.11, 0.00052, 0.11, 0.11]
 
+
+parameters_C0_based_neuron = ['neuron_leak_cond_density',
+              'neuron_k_slow_cond_density',
+              'neuron_ca_simple_cond_density']
+              
+parameters_C0_based_muscle = ['muscle_leak_cond_density',
+              'muscle_k_slow_cond_density',
+              'muscle_ca_simple_cond_density']
+
+parameters_C0_based_net = ['neuron_to_neuron_exc_syn_conductance',
+                          'neuron_to_neuron_inh_syn_conductance',
+                          'neuron_to_neuron_elec_syn_gbase',
+                          'neuron_to_muscle_exc_syn_conductance',
+                          'neuron_to_muscle_inh_syn_conductance'] # No neuron -> muscle elect syns
+
+parameters_C0_based_net = ['neuron_to_neuron_exc_syn_conductance',
+                          'neuron_to_neuron_inh_syn_conductance',
+                          'exc_syn_k',
+                          'inh_syn_k',
+                          'unphysiological_offset_current'] 
+              
+parameters_C0_based = parameters_C0_based_neuron + parameters_C0_based_muscle + parameters_C0_based_net
+
+
+min_constraints_neuron_tight_C0 = [0.0049, 0.5, 0.05]
+max_constraints_neuron_tight_C0 = [0.0051, 1.8, 1.8]
+
+min_constraints_muscle_tight_C0 = [0.0045, 1.65, 1.15]
+max_constraints_muscle_tight_C0 = [0.0055, 1.75, 1.25]
+
+min_constraints_net_loose_C0 = [.01, .01, 0.0005, .01, .01]
+max_constraints_net_loose_C0 = [.3,  .3,  0.0006,   .3,  .3]
+
+min_constraints_net_loose_C0 = [.01, .01, 0.01, 0.01, 4]
+max_constraints_net_loose_C0 = [.8,  .8,  2,    2,    6]
+
+min_constraints_net_tight_C0 = [0.09, 0.09, 0.00048, 0.09, 0.09]
+max_constraints_net_tight_C0 = [0.11, 0.11, 0.00052, 0.11, 0.11]
+
+
+
 weights0 = {}
 target_data0 = {}
 
@@ -83,7 +144,7 @@ for cell in cells:
     
     var = '%s/0/GenericNeuronCell/v:mean_spike_frequency'%cell
     weights0[var] = 1
-    target_data0[var] = 4
+    target_data0[var] = 4 # Hz
 
 
 #phase offset
@@ -119,13 +180,18 @@ def run_optimisation(prefix,
                      max_evaluations =     20,
                      num_selected =        10,
                      num_offspring =       20,
-                     mutation_rate =       0.5,
+                     mutation_rate =       0.9,
                      num_elites =          1,
                      seed =                12345,
                      simulator =           'jNeuroML',
                      nogui =               False,
                      num_local_procesors_to_use = 4):  
                          
+    print("Running optimisation...")
+    print("parameters: %s"%parameters)
+    print("max_constraints: %s"%max_constraints)
+    print("min_constraints: %s"%min_constraints)
+    print("simulator: %s"%simulator)
     ref = prefix+config
     
     run_dir = "NT_%s_%s"%(ref, time.ctime().replace(' ','_' ).replace(':','.' ))
@@ -140,7 +206,7 @@ def run_optimisation(prefix,
                                    generate_dir=run_dir,
                                    num_local_procesors_to_use = num_local_procesors_to_use)
 
-    peak_threshold = -31 if level is 'A' or level is 'B' else (-20 if level is 'C1' else 0)
+    peak_threshold = -31 if level.startswith('A') or level.startswith('B') else (-20)
 
     analysis_var = {'peak_delta':     0,
                     'baseline':       0,
@@ -320,13 +386,38 @@ if __name__ == '__main__':
                          nogui =            nogui,
                          simulator = simulator,
                          num_local_procesors_to_use =8)
-                         
-    elif '-musc' in sys.argv or '-muscone' in sys.argv:
         
+    if '-muscB' in sys.argv:
+            
+            scalem = 1
+        
+            run_optimisation('Test',
+                             'Muscles',
+                             'B',
+                             parameters_B,
+                             max_constraints_B,
+                             min_constraints_B,
+                             weights_B,
+                             target_data_B,
+                             sim_time = 1000,
+                             dt = 0.1,
+                             population_size =  scale(scalem,100),
+                             max_evaluations =  scale(scalem,500),
+                             num_selected =     scale(scalem,20),
+                             num_offspring =    scale(scalem,20),
+                             mutation_rate =    0.9,
+                             num_elites =       scale(scalem,3),
+                             nogui =            nogui,
+                             seed =             1245637,
+                             simulator = simulator,
+                             num_local_procesors_to_use = 10)
+        
+        
+    elif '-musc' in sys.argv or '-muscC0' in sys.argv or '-muscone' in sys.argv:
         
         if '-musc' in sys.argv:
             
-            scalem = .2
+            scalem = 5
             max_c = max_constraints_neuron_tight + max_constraints_muscle_tight + max_constraints_net_loose
             min_c = min_constraints_neuron_tight + min_constraints_muscle_tight + min_constraints_net_loose
 
@@ -339,6 +430,33 @@ if __name__ == '__main__':
                              parameters_C_based,
                              max_c,
                              min_c,
+                             weights0,
+                             target_data0,
+                             sim_time = 1000,
+                             dt = 0.1,
+                             population_size =  scale(scalem,100),
+                             max_evaluations =  scale(scalem,500),
+                             num_selected =     scale(scalem,20),
+                             num_offspring =    scale(scalem,20),
+                             mutation_rate =    0.9,
+                             num_elites =       scale(scalem,3),
+                             nogui =            nogui,
+                             seed =             1234,
+                             simulator = simulator,
+                             num_local_procesors_to_use = 8)
+                             
+        elif '-muscC0' in sys.argv:
+            
+            scalem = .1
+            max_c0 = max_constraints_neuron_tight_C0 + max_constraints_muscle_tight_C0 + max_constraints_net_loose_C0
+            min_c0 = min_constraints_neuron_tight_C0 + min_constraints_muscle_tight_C0 + min_constraints_net_loose_C0
+        
+            run_optimisation('Test',
+                             'Muscles',
+                             'C0',
+                             parameters_C0_based,
+                             max_c0,
+                             min_c0,
                              weights0,
                              target_data0,
                              sim_time = 1000,
@@ -434,12 +552,56 @@ if __name__ == '__main__':
                          max_evaluations =  20,
                          num_selected =     5,
                          num_offspring =    5,
-                         mutation_rate =    0.1,
+                         mutation_rate =    0.9,
                          num_elites =       1,
                          seed =             123477,
                          nogui =            nogui,
                          num_local_procesors_to_use =10)
                          
+    elif '-oscC0' in sys.argv:
+        
+        scalem = 4
+        max_c0 = max_constraints_neuron_tight_C0 + max_constraints_muscle_tight_C0 + max_constraints_net_loose_C0
+        min_c0 = min_constraints_neuron_tight_C0 + min_constraints_muscle_tight_C0 + min_constraints_net_loose_C0
+
+        weights = {}
+        target_data = {}
+        
+        for cell in ['DB2','VB2','DB3','VB3']:
+            var = '%s/0/GenericNeuronCell/v:mean_spike_frequency'%cell
+            target_data[var] = 3
+            
+        var = 'VB2/0/GenericNeuronCell/v:maximum'
+        target_data[var] = -10
+        var = 'VB2/0/GenericNeuronCell/v:minimum'
+        target_data[var] = -70
+        
+        for key in target_data.keys():
+            weights[key] = 1
+            
+        #simulator = 'jNeuroML'
+
+        run_optimisation('Test',
+                         'Oscillator',
+                         'C0',
+                         parameters_C0_based,
+                         max_c0,
+                         min_c0,
+                         weights,
+                         target_data,
+                         sim_time = 1000,
+                         dt = 0.1,
+                         population_size =  scale(scalem,100),
+                         max_evaluations =  scale(scalem,500),
+                         num_selected =     scale(scalem,20),
+                         num_offspring =    scale(scalem,20),
+                         mutation_rate =    0.9,
+                         num_elites =       scale(scalem,3),
+                         nogui =            nogui,
+                         seed =             12344,
+                         simulator = simulator,
+                         num_local_procesors_to_use = 8)
+
     elif '-oscC1' in sys.argv or '-oscC1one' in sys.argv:
 
         parameters = ['muscle_leak_cond_density',
@@ -481,7 +643,7 @@ if __name__ == '__main__':
                              max_evaluations =  5000,
                              num_selected =     100,
                              num_offspring =    100,
-                             mutation_rate =    0.1,
+                             mutation_rate =    0.9,
                              num_elites =       6,
                              seed =             12347,
                              nogui =            nogui,
@@ -555,7 +717,7 @@ if __name__ == '__main__':
                              max_evaluations =  500,
                              num_selected =     20,
                              num_offspring =    20,
-                             mutation_rate =    0.1,
+                             mutation_rate =    0.9,
                              num_elites =       4,
                              seed =             12347,
                              nogui =            nogui,
@@ -636,7 +798,7 @@ if __name__ == '__main__':
                          max_evaluations =  20,
                          num_selected =     10,
                          num_offspring =    20,
-                         mutation_rate =    0.5,
+                         mutation_rate =    0.9,
                          num_elites =       1,
                          nogui =            nogui,
                          num_local_procesors_to_use = 10)
@@ -673,7 +835,7 @@ if __name__ == '__main__':
                          max_evaluations =  20,
                          num_selected =     5,
                          num_offspring =    5,
-                         mutation_rate =    0.1,
+                         mutation_rate =    0.9,
                          num_elites =       1,
                          simulator =        simulator,
                          nogui =            nogui)
@@ -699,7 +861,7 @@ if __name__ == '__main__':
 
         print("Have run individual instance...")
 
-        peak_threshold = -31 if level is 'A' or level is 'B' else 0
+        peak_threshold = -31 if level.startswith('A') or level.startswith('B') else -20
 
         analysis_var = {'peak_delta':     0,
                         'baseline':       0,
