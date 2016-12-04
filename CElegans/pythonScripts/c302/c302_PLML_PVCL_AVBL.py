@@ -29,7 +29,7 @@ def setup(parameter_set,
                  cells=cells,
                  cells_to_plot=cells_to_plot,
                  cells_to_stimulate=cells_to_stimulate,
-                 override_conn_polarity={
+                 conn_polarity_override={
                      'PVCL-AVBL': 'exc',
                  },
                  conn_number_override={
@@ -38,7 +38,8 @@ def setup(parameter_set,
                  duration=duration,
                  dt=dt,
                  validate=(parameter_set!='B'),
-                 target_directory = target_directory)
+                 target_directory = target_directory,
+                 data_reader="UpdatedSpreadsheetDataReader")
 
         #stim_amplitude = "4.5pA"
         #stim_amplitude = "5.135697186048022pA"

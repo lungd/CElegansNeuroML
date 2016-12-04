@@ -74,7 +74,7 @@ def readDataFromSpreadsheet(include_nonconnected_cells=False, neuron_connect=Fal
 
         return cells, conns
 
-def readMuscleDataFromSpreadsheet():
+def readMuscleDataFromSpreadsheet(include_muscle_to_muscle_conns=False):
 
     conns = []
     neurons = []

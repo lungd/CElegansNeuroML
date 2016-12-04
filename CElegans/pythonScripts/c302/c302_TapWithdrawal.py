@@ -21,7 +21,8 @@ def setup(parameter_set,
     cells_to_stimulate = []
 
     cells_to_plot = ['AVAL', 'AVAR', 'AVBL', 'AVBR', 'PLML', 'PLMR', 'AVM', 'PVDL', 'PVDR', 'AVDL', 'AVDR']
-    cells_to_plot = cells
+    cells_to_plot = ['PLML', 'AVM', 'AVBL', 'AVAL']
+    #cells_to_plot = cells
     reference = "c302_%s_TapWithdrawal"%parameter_set
 
     
@@ -31,7 +32,7 @@ def setup(parameter_set,
                  cells=cells,
                  cells_to_plot=cells_to_plot,
                  cells_to_stimulate=cells_to_stimulate,
-                 override_conn_polarity={
+                 conn_polarity_override={
                     'ALML-ALML':'inh',
                     'ALML-PVCL':'inh',
                     'ALML-PVCR':'inh',
@@ -173,18 +174,20 @@ def setup(parameter_set,
                     'AVAL-PVDR_GJ':6*0.01,
                  },
                  include_muscles=False,
+                 include_muscle_to_muscle_conns=False,
                  duration=duration,
                  dt=dt,
                  validate=(parameter_set!='B'),
-                 target_directory = target_directory)
+                 target_directory = target_directory,
+                 data_reader="UpdatedSpreadsheetDataReader")
 
         stim_amplitude = "14pA"
         #stim_amplitude = "5.135697186048022pA"
 
-        c302.add_new_input(nml_doc, "PLML", "100ms", "600ms", stim_amplitude, params)
-        c302.add_new_input(nml_doc, "PLMR", "100ms", "600ms", stim_amplitude, params)
+        c302.add_new_input(nml_doc, "PLML", "100ms", "600ms", "14pA", params)
+        c302.add_new_input(nml_doc, "PLMR", "100ms", "600ms", "14pA", params)
 
-        c302.add_new_input(nml_doc, "AVM", "1000ms", "400ms", stim_amplitude, params)
+        c302.add_new_input(nml_doc, "AVM", "1000ms", "600ms", "14pA", params)
         
         nml_file = target_directory+'/'+reference+'.nml'
         writers.NeuroMLWriter.write(nml_doc, nml_file) # Write over network file written above...
