@@ -16,7 +16,10 @@ def main(config, parameter_set, prefix, duration, dt, simulator, save=False, sho
                                                        generate=True,
                                                        duration = duration, 
                                                        dt = dt,
-                                                       target_directory='examples')
+                                                       target_directory='examples',
+                                                       data_reader=data_reader)
+
+
     
     os.chdir('examples')
     

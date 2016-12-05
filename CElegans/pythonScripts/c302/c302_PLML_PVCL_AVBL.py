@@ -8,7 +8,8 @@ def setup(parameter_set,
           generate=False,
           duration=1000,
           dt=0.05,
-          target_directory='examples'):
+          target_directory='examples',
+          data_reader="UpdatedSpreadsheetDataReader"):
     
     exec('from parameters_%s import ParameterisedModel'%parameter_set)
     params = ParameterisedModel()
@@ -39,7 +40,7 @@ def setup(parameter_set,
                  dt=dt,
                  validate=(parameter_set!='B'),
                  target_directory = target_directory,
-                 data_reader="UpdatedSpreadsheetDataReader")
+                 data_reader=data_reader)
 
         #stim_amplitude = "4.5pA"
         #stim_amplitude = "5.135697186048022pA"
@@ -57,4 +58,4 @@ if __name__ == '__main__':
     
     parameter_set = sys.argv[1] if len(sys.argv)==2 else 'C2'
     
-    setup(parameter_set, generate=True)
+    setup(parameter_set, generate=True, data_reader="UpdatedSpreadsheetDataReader")
