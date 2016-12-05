@@ -48,6 +48,16 @@ sys.path.append("..")
 LEMS_TEMPLATE_FILE = "LEMS_c302_TEMPLATE.xml"
 
 
+def get_str_from_expnotation(num):
+    """
+    Returns a formatted string representing a float number, e.g. 1*0.00001 would result into 1e-05. Returning 0.00001.
+    Args:
+        num (float): A number. Can be of type int or float or in exponential notation.
+    Returns:
+       (str): A string representing a float with 15 fractional digits.
+    """
+    return '{0:.15f}'.format(num)
+
 def process_args():
     """
     Parse command-line arguments.
@@ -268,7 +278,7 @@ def get_random_colour_hex():
 def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
 
     if type(n) is float:
-        new_id = "%s_%sconns"%(prototype_syn.id, '{0:.80f}'.format(n).replace('.', '_'))
+        new_id = "%s_%sconns"%(prototype_syn.id, get_str_from_expnotation(n).replace('.', '_'))
     else: # int
         new_id = "%s_%sconns"%(prototype_syn.id, str(n).replace('.', '_'))
 
@@ -291,7 +301,7 @@ def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
         elif isinstance(prototype_syn, GapJunction):
             magnitude, unit = bioparameters.split_neuroml_quantity(prototype_syn.conductance)
             if type(n) is float:
-                cond = "%s%s"%('{0:.80f}'.format(magnitude*n), unit)
+                cond = "%s%s"%(get_str_from_expnotation(magnitude*n), unit)
             else:
                 cond = "%s%s"%(magnitude*n, unit)
             new_syn = GapJunction(id=new_id,
@@ -302,7 +312,7 @@ def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
         elif isinstance(prototype_syn, GradedSynapse):
             magnitude, unit = bioparameters.split_neuroml_quantity(prototype_syn.conductance)
             if type(n) is float:
-                cond = "%s%s"%('{0:.80f}'.format(magnitude*n), unit)
+                cond = "%s%s"%(get_str_from_expnotation(magnitude*n), unit)
             else:
                 cond = "%s%s"%(magnitude*n, unit)
             new_syn = GradedSynapse(id=new_id,
@@ -770,9 +780,10 @@ def generate(net_id,
                     magnitude, unit = bioparameters.split_neuroml_quantity(syn0.conductance)
                 else:
                     magnitude, unit = bioparameters.split_neuroml_quantity(syn0.gbase)
+
                 cond0 = "%s%s"%(magnitude*conn.number, unit)
-                cond1 = "%s%s"%(magnitude*number_syns, unit)
-                if verbose: 
+                cond1 = "%s%s"%(get_str_from_expnotation(magnitude * number_syns), unit)
+                if verbose:
                     print_(">> Changing number of effective synapses connection %s -> %s: was: %s (total cond: %s), becomes %s (total cond: %s)" % \
                      (conn.pre_cell, conn.post_cell, conn.number, cond0, number_syns, cond1))
 
@@ -911,8 +922,8 @@ def generate(net_id,
                     magnitude, unit = bioparameters.split_neuroml_quantity(syn0.gbase)
                     
                 cond0 = "%s%s"%(magnitude*conn.number, unit)
-                cond1 = "%s%s"%(magnitude*number_syns, unit)
-                if verbose: 
+                cond1 = "%s%s"%(get_str_from_expnotation(magnitude * number_syns), unit)
+                if verbose:
                     print_(">> Changing number of effective synapses connection %s -> %s: was: %s (total cond: %s), becomes %s (total cond: %s)" % \
                      (conn.pre_cell, conn.post_cell, conn.number, cond0, number_syns, cond1))
 

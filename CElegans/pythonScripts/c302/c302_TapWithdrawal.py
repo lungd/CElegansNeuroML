@@ -18,6 +18,7 @@ def setup(parameter_set,
     params.set_bioparameter("unphysiological_offset_current_dur", "2000 ms", "Testing TapWithdrawal", "0")
 
     cells = ['AVAL', 'AVAR', 'AVBL', 'AVBR', 'PVCL', 'PVCR', 'AVDL', 'AVDR', 'DVA', 'PVDL', 'PVDR', 'PLML', 'PLMR', 'AVM', 'ALML', 'ALMR']
+    cells_to_stimulate = ['PLML', 'PLMR', 'AVM']
     cells_to_stimulate = []
 
     cells_to_plot = ['AVAL', 'AVAR', 'AVBL', 'AVBR', 'PLML', 'PLMR', 'AVM', 'PVDL', 'PVDR', 'AVDL', 'AVDR']

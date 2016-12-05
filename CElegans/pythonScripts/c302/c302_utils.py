@@ -62,7 +62,7 @@ def generate_traces_plot(config,parameter_set,xvals,yvals,info,labels,save,save_
                         save_figure_to=(None if not save else save_fig_path%(file_name)),
                         cols_in_legend_box=8)
     
-def plot_c302_results(lems_results, config, parameter_set, directory='./',save=True,show_plot_already=True):
+def plot_c302_results(lems_results, config, parameter_set, directory='./',save=True,show_plot_already=True, data_reader='SpreadsheetDataReader'):
     
     params = {'legend.fontsize': 8,
               'font.size': 10}
@@ -76,10 +76,17 @@ def plot_c302_results(lems_results, config, parameter_set, directory='./',save=T
     cells = []
     muscles = False
     times = [t*1000 for t in lems_results['t']]
+
+    muscle_prefixes = ['MD', 'MV']
+    if data_reader == "UpdatedSpreadsheetDataReader":
+        import UpdatedSpreadsheetDataReader
+        muscle_prefixes = UpdatedSpreadsheetDataReader.get_body_wall_muscle_prefixes()
     for cm in lems_results.keys():
-        if not cm=='t' and not cm.startswith('MD') and not cm.startswith('MV') and cm.endswith('/v'):
+        if cm == 't':
+            continue
+        if not cm.startswith(tuple(muscle_prefixes)) and cm.endswith('/v'):
             cells.append(cm.split('/')[0])
-        if 'MDL' in cm:
+        if not muscles and cm.startswith(tuple(muscle_prefixes)):
             muscles = True
     
     cells.sort()
@@ -141,10 +148,16 @@ def plot_c302_results(lems_results, config, parameter_set, directory='./',save=T
     
     ################################################
     ## Plot voltages muscles
-    mneurons, all_muscles, muscle_conns = c302.get_cell_muscle_names_and_connection(test=True)
-    all_muscles.remove('MANAL')
-    all_muscles.remove('MVULVA')
-    all_muscles.remove('MVR24')
+    mneurons, all_muscles, muscle_conns = c302.get_cell_muscle_names_and_connection(data_reader, test=True)
+    if 'MANAL' in all_muscles:
+        all_muscles.remove('MANAL')
+    if 'MVULVA' in all_muscles:
+        all_muscles.remove('MVULVA')
+    if 'MVR24' in all_muscles:
+        all_muscles.remove('MVR24')
+
+    all_muscles = [m for m in all_muscles if m.startswith(tuple(muscle_prefixes))]
+
     all_muscles.sort()
     all_muscles.reverse()
 

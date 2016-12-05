@@ -18,13 +18,18 @@ import os
 spreadsheet_location = os.path.dirname(os.path.abspath(__file__)) + "/../../../"
 filename = "%sherm_full_edgelist.csv" % spreadsheet_location
 
+def get_all_muscle_prefixes():
+    return ["pm", "vm", "um", "dBWM", "vBWM"]
+
+def get_body_wall_muscle_prefixes():
+    return ["dBWM", "vBWM"]
 
 def is_muscle_cell(cell):
-    known_muscle_prefixes = ["pm", "vm", "um", "dBWM", "vBWM"]
+    known_muscle_prefixes = get_all_muscle_prefixes()
     return cell.startswith(tuple(known_muscle_prefixes))
 
 def is_body_wall_muscle(cell):
-    known_muscle_prefixes = ["dBWM", "vBWM"]
+    known_muscle_prefixes = get_body_wall_muscle_prefixes()
     return cell.startswith(tuple(known_muscle_prefixes))
 
 def is_neuron(cell):
