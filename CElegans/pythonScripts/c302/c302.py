@@ -195,15 +195,9 @@ def get_muscle_names():
     return names
 
 def get_muscle_position(muscle, data_reader="SpreadsheetDataReader"):
-    if data_reader == "SpreadsheetDataReader":
-        x = 80 * (-1 if muscle[1] == 'V' else 1)
-        z = 80 * (-1 if muscle[2] == 'L' else 1)
-        y = -300 + 30 * int(muscle[3:5])
-    elif data_reader == "UpdatedSpreadsheetDataReader":
-        x = 80 * (-1 if muscle[0] == 'v' else 1)
-        z = 80 * (-1 if muscle[4] == 'L' else 1)
-        y = -300 + 30 * int(muscle[5:7])
-
+    x = 80 * (-1 if muscle[1] == 'V' else 1)
+    z = 80 * (-1 if muscle[2] == 'L' else 1)
+    y = -300 + 30 * int(muscle[3:5])
     return x, y, z
 
 
@@ -356,8 +350,7 @@ def get_cell_muscle_names_and_connection(data_reader="SpreadsheetDataReader", in
 
     neurons, muscles, conns = load_data_reader(data_reader).readMuscleDataFromSpreadsheet(include_muscle_to_muscle_conns)
 
-    if data_reader == "SpreadsheetDataReader":
-        muscles = get_muscle_names()
+    muscles = get_muscle_names()
 
     return neurons, muscles, conns
 
@@ -641,8 +634,8 @@ def generate(net_id,
         muscle_count = 0
         for muscle in muscles:
 
-            if data_reader == "UpdatedSpreadsheetDataReader" and not load_data_reader(data_reader).is_body_wall_muscle(muscle):
-                continue
+            #if data_reader == "UpdatedSpreadsheetDataReader" and not load_data_reader(data_reader).is_body_wall_muscle(muscle):
+            #    continue
 
             inst = Instance(id="0")
 

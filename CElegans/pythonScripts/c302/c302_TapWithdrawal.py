@@ -9,7 +9,7 @@ def setup(parameter_set,
           duration=2000,
           dt=0.05,
           target_directory='examples',
-          data_reader="UpdatedSpreadsheetDataReader"):
+          data_reader="SpreadsheetDataReader"):
     
     exec('from parameters_%s import ParameterisedModel'%parameter_set)
     params = ParameterisedModel()
@@ -175,7 +175,7 @@ def setup(parameter_set,
                     'PVDR-AVAL_GJ':6*0.01,
                     'AVAL-PVDR_GJ':6*0.01,
                  },
-                 include_muscles=False,
+                 include_muscles=True,
                  include_muscle_to_muscle_conns=False,
                  duration=duration,
                  dt=dt,

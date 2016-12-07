@@ -86,7 +86,9 @@ def plot_c302_results(lems_results, config, parameter_set, directory='./',save=T
             continue
         if not cm.startswith(tuple(muscle_prefixes)) and cm.endswith('/v'):
             cells.append(cm.split('/')[0])
-        if not muscles and cm.startswith(tuple(muscle_prefixes)):
+            print "############### c302_utils cell %s" %cm 
+        if not muscles and cm.endswith('/v') and cm.startswith(tuple(muscle_prefixes)):
+            print "############### c302_utils muscle %s" %cm
             muscles = True
     
     cells.sort()

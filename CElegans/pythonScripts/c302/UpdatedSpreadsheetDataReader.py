@@ -22,7 +22,7 @@ def get_all_muscle_prefixes():
     return ["pm", "vm", "um", "dBWM", "vBWM"]
 
 def get_body_wall_muscle_prefixes():
-    return ["dBWM", "vBWM"]
+    return ["MV", "MD"]
 
 def is_muscle_cell(cell):
     known_muscle_prefixes = get_all_muscle_prefixes()
