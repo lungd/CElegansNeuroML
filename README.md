@@ -28,6 +28,7 @@ Please note:
 
 More accurate models of conductance based neurons and more realistic synapses will be incorporated into [c302](https://github.com/openworm/CElegansNeuroML/tree/master/CElegans/pythonScripts/c302) first, and then the neuroConstruct model will be updated.
 
+
 ### Running the neuroConstruct model
 
 For full details on running this neuroConstruct project see:
