@@ -11,12 +11,10 @@ from neuroml import InputList
 from neuroml import Projection
 from neuroml import Connection
 from neuroml import ConnectionWD
-from neuroml import SynapticConnection
 from neuroml import ElectricalProjection
-from neuroml import ElectricalConnection
-from neuroml import ElectricalConnectionInstance
+from neuroml import ElectricalConnectionInstanceW
 from neuroml import ContinuousProjection
-from neuroml import ContinuousConnectionInstance
+from neuroml import ContinuousConnectionInstanceW
 from neuroml import ExpTwoSynapse
 from neuroml import GapJunction
 from neuroml import GradedSynapse
@@ -37,6 +35,7 @@ import argparse
 import shutil
 import os
 import importlib
+import math
 
 from parameters_C0 import GradedSynapse2
 from parameters_C2 import DelayedGapJunction
@@ -447,9 +446,10 @@ def get_random_colour_hex():
 
 def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
 
-    new_id = "%s_%sconns"%(prototype_syn.id, str(n).replace('.', '_'))
-    if type(n) is float:
-        new_id = "%s_%sconns" % (prototype_syn.id, get_str_from_expnotation(n).replace('.', '_'))
+    #print_("Creating synapse from %s with %i connections"%(prototype_syn.id, n))
+    new_id = "%s"%(prototype_syn.id)
+    #if type(n) is float:
+    #    new_id = "%s_%sconns" % (prototype_syn.id, get_str_from_expnotation(n).replace('.', '_'))
     
     if isinstance(prototype_syn, ExpTwoSynapse):
         new_id = "%s"%(prototype_syn.id)
@@ -469,9 +469,9 @@ def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
 
         elif isinstance(prototype_syn, GapJunction):
             magnitude, unit = bioparameters.split_neuroml_quantity(prototype_syn.conductance)
-            cond = "%s%s" % (magnitude * n, unit)
-            if type(n) is float:
-                cond = "%s%s" % (get_str_from_expnotation(magnitude * n), unit)
+            cond = "%s%s" % (magnitude, unit)
+            #if type(n) is float:
+            #    cond = "%s%s" % (get_str_from_expnotation(magnitude * n), unit)
             new_syn = GapJunction(id=new_id,
                                   conductance =       cond)
 
@@ -494,9 +494,9 @@ def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
 
         elif isinstance(prototype_syn, GradedSynapse):
             magnitude, unit = bioparameters.split_neuroml_quantity(prototype_syn.conductance)
-            cond = "%s%s" % (magnitude * n, unit)
-            if type(n) is float:
-                cond = "%s%s" % (get_str_from_expnotation(magnitude * n), unit)
+            cond = "%s%s" % (magnitude, unit)
+            #if type(n) is float:
+            #    cond = "%s%s" % (get_str_from_expnotation(magnitude * n), unit)
             new_syn = GradedSynapse(id=new_id,
                                     conductance =       cond,
                                     delta =             prototype_syn.delta,
@@ -527,9 +527,9 @@ def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
 
         elif isinstance(prototype_syn, ):
             magnitude, unit = bioparameters.split_neuroml_quantity(prototype_syn.conductance)
-            cond = "%s%s" % (magnitude * n, unit)
-            if type(n) is float:
-                cond = "%s%s" % (get_str_from_expnotation(magnitude * n), unit)
+            cond = "%s%s" % (magnitude, unit)
+            #if type(n) is float:
+            #    cond = "%s%s" % (get_str_from_expnotation(magnitude * n), unit)
             new_syn = GradedSynapse2(id=new_id,
                                     conductance =       cond,
                                     ar =                prototype_syn.ar,
@@ -905,7 +905,7 @@ def generate(net_id,
                 pop0.properties.append(p)
 
             x, y, z = get_muscle_position(muscle, data_reader)
-            print_('Positioning muscle: %s at (%s,%s,%s)'%(muscle,x,y,z))
+            #print_('Positioning muscle: %s at (%s,%s,%s)'%(muscle,x,y,z))
             inst.location = Location(x,y,z)
 
             #target = "%s/0/%s"%(pop0.id, params.generic_muscle_cell.id) # unused
@@ -1027,6 +1027,12 @@ def generate(net_id,
                     nml_doc.silent_synapses.append(silent)
 
             number_syns = conn.number
+            
+            
+            if params.get_bioparameter('global_connectivity_power_scaling'):
+                scale = params.get_bioparameter('global_connectivity_power_scaling').x()
+                #print("Scaling by %s"%scale)
+                number_syns = math.pow(number_syns,scale)
 
             if conn_number_override is not None and (conn_number_override.has_key(conn_shorthand)):
                 number_syns = conn_number_override[conn_shorthand]
@@ -1077,12 +1083,13 @@ def generate(net_id,
                 #print_("Conn %s -> %s"%(pre_cell_id,post_cell_id))
 
                 # Add a Connection with the closest locations
-                conn0 = ElectricalConnectionInstance(id="0", \
+                conn0 = ElectricalConnectionInstanceW(id="0", \
                            pre_cell=pre_cell_id,
                            post_cell=post_cell_id,
-                           synapse=syn_new.id)
+                           synapse=syn_new.id,
+                           weight=number_syns)
 
-                proj0.electrical_connection_instances.append(conn0)
+                proj0.electrical_connection_instance_ws.append(conn0)
                 
             elif analog_conn:
         
@@ -1095,13 +1102,14 @@ def generate(net_id,
                 pre_cell_id= get_cell_id_string(conn.pre_cell, params)
                 post_cell_id= get_cell_id_string(conn.post_cell, params)
 
-                conn0 = ContinuousConnectionInstance(id="0", \
+                conn0 = ContinuousConnectionInstanceW(id="0", \
                            pre_cell=pre_cell_id,
                            post_cell=post_cell_id,
                            pre_component="silent",
-                           post_component=syn_new.id)
+                           post_component=syn_new.id,
+                           weight=number_syns)
 
-                proj0.continuous_connection_instances.append(conn0)
+                proj0.continuous_connection_instance_ws.append(conn0)
                 
                 
             else:
@@ -1192,6 +1200,11 @@ def generate(net_id,
 
             number_syns = conn.number
 
+            if params.get_bioparameter('global_connectivity_power_scaling'):
+                scale = params.get_bioparameter('global_connectivity_power_scaling').x()
+                #print("Scaling by %s"%scale)
+                number_syns = math.pow(number_syns,scale)
+
             if conn_number_override is not None and (conn_number_override.has_key(conn_shorthand)):
                 number_syns = conn_number_override[conn_shorthand]
             elif conn_number_scaling is not None and (conn_number_scaling.has_key(conn_shorthand)):
@@ -1238,13 +1251,15 @@ def generate(net_id,
                 #print_("Conn %s -> %s"%(pre_cell_id,post_cell_id))
 
                 # Add a Connection with the closest locations
-                conn0 = ElectricalConnectionInstance(id="0", \
-                                                     pre_cell=pre_cell_id,
-                                                     post_cell=post_cell_id,
-                                                     synapse=syn_new.id)
 
-                proj0.electrical_connection_instances.append(conn0)
+                conn0 = ElectricalConnectionInstanceW(id="0", \
+                           pre_cell=pre_cell_id,
+                           post_cell=post_cell_id,
+                           synapse=syn_new.id,
+                           weight=number_syns)
 
+                proj0.electrical_connection_instance_ws.append(conn0)
+                
             elif analog_conn:
 
                 proj0 = ContinuousProjection(id=proj_id, \
@@ -1256,13 +1271,14 @@ def generate(net_id,
                 pre_cell_id= get_cell_id_string(conn.pre_cell, params)
                 post_cell_id= get_cell_id_string(conn.post_cell, params, muscle=True)
 
-                conn0 = ContinuousConnectionInstance(id="0", \
-                                                     pre_cell=pre_cell_id,
-                                                     post_cell=post_cell_id,
-                                                     pre_component="silent",
-                                                     post_component=syn_new.id)
+                conn0 = ContinuousConnectionInstanceW(id="0", \
+                           pre_cell=pre_cell_id,
+                           post_cell=post_cell_id,
+                           pre_component="silent",
+                           post_component=syn_new.id,
+                           weight=number_syns)
 
-                proj0.continuous_connection_instances.append(conn0)
+                proj0.continuous_connection_instance_ws.append(conn0)
 
             else:
 

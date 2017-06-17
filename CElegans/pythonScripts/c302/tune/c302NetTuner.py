@@ -108,11 +108,6 @@ parameters_C0_based_muscle = ['muscle_leak_cond_density',
               'muscle_k_slow_cond_density',
               'muscle_ca_simple_cond_density']
 
-parameters_C0_based_net = ['neuron_to_neuron_exc_syn_conductance',
-                          'neuron_to_neuron_inh_syn_conductance',
-                          'neuron_to_neuron_elec_syn_gbase',
-                          'neuron_to_muscle_exc_syn_conductance',
-                          'neuron_to_muscle_inh_syn_conductance'] # No neuron -> muscle elect syns
 
 parameters_C0_based_net = ['neuron_to_neuron_exc_syn_conductance',
                           'neuron_to_neuron_inh_syn_conductance',
@@ -131,13 +126,19 @@ parameters_C0_based_net = ['neuron_to_neuron_exc_syn_conductance',
                           'neuron_to_neuron_inh_syn_conductance',
                           'exc_syn_ad',
                           'inh_syn_ad'] 
+                          
+parameters_C0_based_net = ['neuron_to_neuron_exc_syn_conductance',
+                          'neuron_to_neuron_inh_syn_conductance',
+                          'neuron_to_neuron_elec_syn_gbase',
+                          'neuron_to_muscle_exc_syn_conductance',
+                          'neuron_to_muscle_inh_syn_conductance'] # No neuron -> muscle elect syns
               
 parameters_C0_based = parameters_C0_based_neuron + parameters_C0_based_muscle + parameters_C0_based_net
 
 tight_min = 0.95
 tight_max = 1.05
-loose_min = 0.1
-loose_max = 10
+loose_min = 0.2
+loose_max = 5
 
 min_constraints_neuron_tight_C0 = [ pmC0.get_bioparameter(p).x()*tight_min for p in parameters_C0_based_neuron ]
 max_constraints_neuron_tight_C0 = [ pmC0.get_bioparameter(p).x()*tight_max for p in parameters_C0_based_neuron ]
@@ -515,9 +516,9 @@ if __name__ == '__main__':
                              
         elif '-muscC0' in sys.argv:
             
-            scalem = .1
-            max_c0 = max_constraints_neuron_loose_C0 + max_constraints_muscle_tight_C0 + max_constraints_net_loose_C0
-            min_c0 = min_constraints_neuron_loose_C0 + min_constraints_muscle_tight_C0 + min_constraints_net_loose_C0
+            scalem =10
+            max_c0 = max_constraints_neuron_tight_C0 + max_constraints_muscle_tight_C0 + max_constraints_net_loose_C0
+            min_c0 = min_constraints_neuron_tight_C0 + min_constraints_muscle_tight_C0 + min_constraints_net_loose_C0
             
             weights = {}
             target_data = {}
@@ -529,17 +530,17 @@ if __name__ == '__main__':
                 target_data[var] = 4
                 var = '%s/0/GenericNeuronCell/v:min_peak_no'%cell
                 target_data[var] = 4
-
+            
             for c in ['DB2','VB2','DB3','VB3']:
                 var = '%s/0/GenericNeuronCell/v:maximum'%c
-                target_data[var] = -10
+                target_data[var] = 0
                 var = '%s/0/GenericNeuronCell/v:minimum'%c
                 target_data[var] = -70
 
             for key in target_data.keys():
                 weights[key] = 1
                 if 'imum' in key:
-                    weights[key] = .01
+                    weights[key] = .1
         
             run_optimisation('Test',
                              'Muscles',
@@ -556,11 +557,11 @@ if __name__ == '__main__':
                              num_selected =     scale(scalem,20),
                              num_offspring =    scale(scalem,20),
                              mutation_rate =    0.9,
-                             num_elites =       scale(scalem,3),
+                             num_elites =       scale(scalem,2),
                              nogui =            nogui,
                              seed =             1234,
                              simulator = simulator,
-                             num_local_procesors_to_use = 8)
+                             num_local_procesors_to_use = 12)
         else:
             
             sim_time = 1000
@@ -790,7 +791,6 @@ if __name__ == '__main__':
             analysis = example_run_analysis.analyse(weights.keys())
 
             pp.pprint(analysis)
-
 
 
     elif '-avb-db' in sys.argv:
@@ -1255,11 +1255,6 @@ if __name__ == '__main__':
         run_optimisation('AVB_DB',
                          'AVB_DB',
                          'C2',
-                         parameters,
-                         max_constraints,
-                         min_constraints,
-                         weights,
-                         target_data,
                          config_package="notebooks.configs.AVB",
                          data_reader="UpdatedSpreadsheetDataReader",
                          sim_time=1000,
@@ -1275,6 +1270,60 @@ if __name__ == '__main__':
                          input_list=input_list,
                          simulator=simulator,
                          num_local_procesors_to_use=15)
+
+
+    elif '-imC0' in sys.argv:
+
+        print("Running opt on muscle...")
+        parameters = ['muscle_leak_cond_density',
+                      'muscle_k_slow_cond_density',
+                      'muscle_ca_simple_cond_density',
+                      'muscle_specific_capacitance',
+                      'leak_erev',
+                      'k_slow_erev',
+                      'ca_simple_erev']
+
+        # above parameters will not be modified outside these bounds:
+        min_constraints = [0.0003, 0.05, 0.05, 0.2, -70, -90, 30]
+        max_constraints = [0.01, 0.7, 0.5, 1.8, -40, -60, 60]
+
+        analysis_var = {'peak_delta': 0, 'baseline': 0, 'dvdt_threshold': 0, 'peak_threshold': 0}
+
+        cell_ref = 'MDR01/0/GenericMuscleCell/v'
+
+        weights = {cell_ref + ':average_minimum': 1,
+                   cell_ref + ':mean_spike_frequency': 1,
+                   cell_ref + ':average_maximum': 1,
+                   cell_ref + ':max_peak_no': 1}
+
+        target_data = {cell_ref + ':average_minimum': -70,
+                       cell_ref + ':mean_spike_frequency': 4,
+                       cell_ref + ':average_maximum': 40,
+                       cell_ref + ':max_peak_no': 8}
+
+        simulator = 'jNeuroML_NEURON'
+
+        scalem = 10
+        run_optimisation('Test',
+                         'IClampMuscle',
+                         'C0',
+                         parameters,
+                         max_constraints,
+                         min_constraints,
+                         weights,
+                         target_data,
+                         sim_time=2000,
+                         dt=0.1,
+                         population_size=scale(scalem, 100),
+                         max_evaluations=scale(scalem, 500),
+                         num_selected=scale(scalem, 20),
+                         num_offspring=scale(scalem, 30),
+                         mutation_rate=0.9,
+                         num_elites=scale(scalem, 5),
+                         seed=1234778,
+                         nogui=nogui,
+                         simulator=simulator,
+                         num_local_procesors_to_use=12)
   
     elif '-icC1' in sys.argv or '-icC1one' in sys.argv:
 

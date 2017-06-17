@@ -241,8 +241,7 @@ def run_individual(sim_var,
                 print "Adding param %s = %s%s" % (var_name, v['value'], v['unit'])
                 sim.params.add_bioparameter(var_name, "%s%s" % (v['value'], unit), "0", "C302Controller")
             else:
-                raise Exception(
-                    "Cannot add %s=%s.\nIt is only possible to add new parameters with a dict containing the value and the unit" % (var_name, v))
+                raise Exception('Problem: parameter named <%s> not found!\nAll params:\n%s' % (var_name, sim.params.bioparameter_info()))
         else:
             if isinstance(v, dict):
                 unit = "" if not v['unit'] else " %s" % v['unit']
@@ -286,6 +285,15 @@ if __name__ == '__main__':
                   ('chem_exc_syn_decay',10),
                   ('chem_inh_syn_gbase',0.01),
                   ('chem_inh_syn_decay',40)])
+
+        t, volts = cont.run_individual(sim_vars, show=True)
+        print(volts.keys())
+        
+    elif len(sys.argv) == 2 and sys.argv[1] == '-imC0':
+                
+        cont = C302Controller('TestIClampMuscle', 'C0', 'IClampMuscle', generate_dir = 'temp')
+
+        sim_vars = OrderedDict([])
 
         t, volts = cont.run_individual(sim_vars, show=True)
         print(volts.keys())
