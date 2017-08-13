@@ -440,6 +440,15 @@ if __name__ == '__main__':
         t, volts = cont.run_individual(sim_vars, show=True)
         print(volts.keys())
         
+    elif len(sys.argv) == 2 and sys.argv[1] == '-imC0':
+                
+        cont = C302Controller('TestIClampMuscle', 'C0', 'IClampMuscle', generate_dir = 'temp')
+
+        sim_vars = OrderedDict([])
+
+        t, volts = cont.run_individual(sim_vars, show=True)
+        print(volts.keys())
+        
     else:
     
         cont = C302Controller('SimpleTest', 'C', 'IClamp')
