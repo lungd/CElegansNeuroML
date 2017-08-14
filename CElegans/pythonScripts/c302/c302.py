@@ -482,9 +482,9 @@ def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
 
         elif isinstance(prototype_syn, DelayedGapJunction):
             magnitude, unit = bioparameters.split_neuroml_quantity(prototype_syn.conductance)
-            cond = "%s%s" % (magnitude * n, unit)
-            if type(n) is float:
-                cond = "%s%s" % (get_str_from_expnotation(magnitude * n), unit)
+            cond = "%s%s" % (magnitude, unit)
+            #if type(n) is float:
+            #    cond = "%s%s" % (get_str_from_expnotation(magnitude * n), unit)
             new_syn = DelayedGapJunction(id=new_id,
                                          weight=prototype_syn.weight,
                                          conductance=cond,
@@ -511,9 +511,9 @@ def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
 
         elif isinstance(prototype_syn, DelayedGradedSynapse):
             magnitude, unit = bioparameters.split_neuroml_quantity(prototype_syn.conductance)
-            cond = "%s%s" % (magnitude * n, unit)
-            if type(n) is float:
-                cond = "%s%s" % (get_str_from_expnotation(magnitude * n), unit)
+            cond = "%s%s" % (magnitude, unit)
+            #if type(n) is float:
+            #    cond = "%s%s" % (get_str_from_expnotation(magnitude * n), unit)
             new_syn = DelayedGradedSynapse(id=new_id,
                                            weight=prototype_syn.weight,
                                            conductance=cond,
