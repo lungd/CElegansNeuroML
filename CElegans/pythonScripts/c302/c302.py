@@ -178,7 +178,7 @@ def process_args():
 
     return parser.parse_args()
 
-
+"""
 def get_specific_elec_syn_params(params, pre_cell, post_cell, syn_type, polarity):
     prefix = "%s_to_%s_%s_syn" % (pre_cell, post_cell, polarity)
     # delayed_gj_prefix = "%s_to_%s_delayed_%s_syn" % (pre_cell, post_cell, polarity)
@@ -238,10 +238,11 @@ def get_specific_chem_syn_params(params, pre_cell, post_cell, syn_type, polarity
         syn_id = def_prefix
 
     return syn_id, weight, conductance, delta, vth, erev, k, sigma, mu
-
+"""
 
 def get_syn(params, pre_cell, post_cell, syn_type, polarity):
-    if polarity == "elec":
+    return params.get_syn(pre_cell, post_cell, syn_type, polarity)
+    """if polarity == "elec":
         syn_id, weight, conductance, sigma, mu = get_specific_elec_syn_params(params, pre_cell, post_cell, syn_type, polarity)
         if sigma or mu:
             return DelayedGapJunction(id=syn_id,
@@ -268,7 +269,7 @@ def get_syn(params, pre_cell, post_cell, syn_type, polarity):
                          delta=delta.value,
                          Vth=vth.value,
                          erev=erev.value,
-                         k=k.value)
+                         k=k.value)"""
 
 
 quadrant0 = 'MDR'
@@ -526,7 +527,7 @@ def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
             existing_synapses[new_id] = new_syn
             nml_doc.graded_synapses.append(new_syn)
 
-        elif isinstance(prototype_syn, ):
+        elif isinstance(prototype_syn, GradedSynapse2):
             magnitude, unit = bioparameters.split_neuroml_quantity(prototype_syn.conductance)
             cond = "%s%s" % (magnitude, unit)
             #if type(n) is float:
@@ -731,6 +732,7 @@ def generate(net_id,
         for ctd in params.custom_component_types_definitions:
             lems_info["includes"].append(ctd)
             if target_directory != './':
+                #def_file = './%s' % ctd
                 def_file = "%s/%s"%(os.path.dirname(os.path.abspath(__file__)), ctd)
                 shutil.copy(def_file, target_directory)
             nml_doc.includes.append(IncludeType(href=ctd))
