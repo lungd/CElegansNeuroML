@@ -155,7 +155,7 @@ class C302Simulation(object):
         for cell in self.cells:
             self.volts[res_template_n%cell] = [v*1000 for v in self.results[res_template_n%cell]]
 
-
+        muscles = []
         if self.muscles_to_include is None or self.muscles_to_include is True:
             # muscles_to_include = True or None -> ALL muscles
             muscles = c302.get_muscle_names()
