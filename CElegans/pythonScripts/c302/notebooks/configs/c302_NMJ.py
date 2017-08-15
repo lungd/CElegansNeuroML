@@ -33,8 +33,7 @@ def setup(parameter_set,
     if config_param_overrides.has_key('conn_polarity_override'):
         conn_polarity_override = config_param_overrides['conn_polarity_override']
 
-    print "############### conn pol override %s" % conn_polarity_override
-    
+    nml_doc = None
     if generate:
         nml_doc = c302.generate(reference,
                                 params,

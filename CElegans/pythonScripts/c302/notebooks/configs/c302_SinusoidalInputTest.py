@@ -57,6 +57,7 @@ def setup(parameter_set,
     conn_number_override = {
     }
 
+    nml_doc = None
     if generate:
         nml_doc = c302.generate(reference,
                                 params,
