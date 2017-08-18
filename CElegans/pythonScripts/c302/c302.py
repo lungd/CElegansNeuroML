@@ -446,6 +446,7 @@ def get_random_colour_hex():
     return col
 
 
+"""
 def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
 
     #print_("Creating synapse from %s with %i connections"%(prototype_syn.id, n))
@@ -509,23 +510,6 @@ def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
             existing_synapses[new_id] = new_syn
             nml_doc.graded_synapses.append(new_syn)
 
-        elif isinstance(prototype_syn, DelayedGradedSynapse):
-            magnitude, unit = bioparameters.split_neuroml_quantity(prototype_syn.conductance)
-            cond = "%s%s" % (magnitude, unit)
-            #if type(n) is float:
-            #    cond = "%s%s" % (get_str_from_expnotation(magnitude * n), unit)
-            new_syn = DelayedGradedSynapse(id=new_id,
-                                           weight=prototype_syn.weight,
-                                           conductance=cond,
-                                           delta=prototype_syn.delta,
-                                           vth=prototype_syn.vth,
-                                           erev=prototype_syn.erev,
-                                           k=prototype_syn.k,
-                                           sigma=prototype_syn.sigma,
-                                           mu=prototype_syn.mu)
-
-            existing_synapses[new_id] = new_syn
-            nml_doc.graded_synapses.append(new_syn)
 
         elif isinstance(prototype_syn, GradedSynapse2):
             magnitude, unit = bioparameters.split_neuroml_quantity(prototype_syn.conductance)
@@ -547,7 +531,7 @@ def create_n_connection_synapse(prototype_syn, n, nml_doc, existing_synapses):
         new_syn = existing_synapses[new_id]
 
     return new_syn
-
+"""
 
 def get_file_name_relative_to_c302(file_name):
     
@@ -999,7 +983,7 @@ def generate(net_id,
                 orig_pol = "inh"
             if '_GJ' in conn.synclass:
                 conn_pol = "elec"
-                elect_conn = isinstance(params.neuron_to_neuron_elec_syn, GapJunction) or isinstance(params.neuron_to_neuron_elec_syn, DelayedGapJunction)
+                elect_conn = elect_conn = params.is_elec_conn(params.neuron_to_neuron_elec_syn)
                 conn_shorthand = "%s-%s_GJ" % (conn.pre_cell, conn.post_cell)
 
             if conns_to_include and conn_shorthand not in conns_to_include:
@@ -1021,22 +1005,26 @@ def generate(net_id,
 
 
             polarity = None
-            if conn_polarity_override and conn_polarity_override.has_key(conn_shorthand):
-                polarity = conn_polarity_override[conn_shorthand]
+            if conn_polarity_override:
+                for conn_pol in conn_polarity_override.keys():
+                    if any(regex_part in conn_pol for regex_part in ['*', '\d', '.', '+']):
+                        if re.match(conn_pol, conn_shorthand):
+                            polarity = conn_polarity_override[conn_pol]
+                            break
+                    elif conn_pol == conn_shorthand:
+                        polarity = conn_polarity_override[conn_pol]
+                        break
 
             if polarity and not elect_conn:
                 syn0 = get_syn(params, conn.pre_cell, conn.post_cell, conn_type, polarity)
                 if verbose and polarity != orig_pol:
                     print_(">> Changing polarity of connection %s -> %s: was: %s, becomes %s " % \
                        (conn.pre_cell, conn.post_cell, orig_pol, polarity))
-                
-                
-                
-            if isinstance(syn0, GradedSynapse) or isinstance(syn0, GradedSynapse2) or isinstance(syn0, DelayedGradedSynapse):
+
+            if params.is_analog_conn(syn0):
                 analog_conn = True
-                if len(nml_doc.silent_synapses)==0:
-                    silent = SilentSynapse(id="silent")
-                    nml_doc.silent_synapses.append(silent)
+                if len(nml_doc.silent_synapses) == 0:
+                    nml_doc.silent_synapses.append(SilentSynapse(id="silent"))
 
             number_syns = conn.number
             
@@ -1079,7 +1067,7 @@ def generate(net_id,
             #if conn.pre_cell.startswith(tuple(known_motor_prefixes)) or conn.post_cell.startswith(tuple(known_motor_prefixes)):
             #    print "######### %s-%s %s %s" % (conn.pre_cell, conn.post_cell, number_syns, conn.synclass)
 
-            syn_new = create_n_connection_synapse(syn0, number_syns, nml_doc, existing_synapses)
+            syn_new = params.create_n_connection_synapse(syn0, number_syns, nml_doc, existing_synapses)
 
             if elect_conn:
 
@@ -1175,7 +1163,7 @@ def generate(net_id,
             if '_GJ' in conn.synclass :
                 conn_pol = "elec"
                 orig_pol = "elec"
-                elect_conn = isinstance(params.neuron_to_neuron_elec_syn, GapJunction) or isinstance(params.neuron_to_neuron_elec_syn, DelayedGapJunction)
+                elect_conn = params.is_elec_conn(params.neuron_to_neuron_elec_syn)
                 conn_shorthand = "%s-%s_GJ" % (conn.pre_cell, conn.post_cell)
 
             if conns_to_include and conn_shorthand not in conns_to_include:
@@ -1205,11 +1193,10 @@ def generate(net_id,
                     print_(">> Changing polarity of connection %s -> %s: was: %s, becomes %s " % \
                            (conn.pre_cell, conn.post_cell, orig_pol, polarity))
 
-            if isinstance(syn0, GradedSynapse) or isinstance(syn0, GradedSynapse2) or isinstance(syn0, DelayedGradedSynapse):
+            if params.is_analog_conn(syn0):
                 analog_conn = True
-                if len(nml_doc.silent_synapses)==0:
-                    silent = SilentSynapse(id="silent")
-                    nml_doc.silent_synapses.append(silent)
+                if len(nml_doc.silent_synapses) == 0:
+                    nml_doc.silent_synapses.append(SilentSynapse(id="silent"))
 
             number_syns = conn.number
 
@@ -1250,7 +1237,7 @@ def generate(net_id,
                            (conn.pre_cell, conn.post_cell, gj, conn.number, cond0, number_syns, cond1))
 
 
-            syn_new = create_n_connection_synapse(syn0, number_syns, nml_doc, existing_synapses)
+            syn_new = params.create_n_connection_synapse(syn0, number_syns, nml_doc, existing_synapses)
 
             if elect_conn:
 

@@ -1,5 +1,7 @@
 from decimal import Decimal
 
+from neuroml import ExpTwoSynapse, GapJunction, GradedSynapse, SilentSynapse
+
 '''
     Subject to much change & refactoring once PyOpenWorm is stable...
 '''
@@ -130,3 +132,28 @@ class c302ModelPrototype(ParameterisedModelPrototype):
         elif pol == 'inh':
             return self.get_inh_syn(pre_cell, post_cell, type)
 
+
+    def create_n_connection_synapse(self, prototype_syn, n, nml_doc, existing_synapses):
+        if existing_synapses.has_key(prototype_syn.id):
+            return existing_synapses[prototype_syn.id]
+
+        if isinstance(prototype_syn, ExpTwoSynapse):
+            existing_synapses[prototype_syn.id] = prototype_syn
+            nml_doc.exp_two_synapses.append(prototype_syn)
+        elif isinstance(prototype_syn, GapJunction):
+            existing_synapses[prototype_syn.id] = prototype_syn
+            nml_doc.gap_junctions.append(prototype_syn)
+        elif isinstance(prototype_syn, GradedSynapse):
+            existing_synapses[prototype_syn.id] = prototype_syn
+            nml_doc.graded_synapses.append(prototype_syn)
+        else:
+            raise Exception('Unknown synapse type')
+
+        return prototype_syn
+
+
+    def is_analog_conn(self, syn):
+        return isinstance(syn, GradedSynapse)
+
+    def is_elec_conn(self, syn):
+        return isinstance(syn, GapJunction)
