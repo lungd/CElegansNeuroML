@@ -273,6 +273,7 @@ def run_optimisation(prefix,
             ref = wref.split(':')[0]
             if not ref in added and not "phase_offset" in ref:
                 added.append(ref)
+                # TODO: fails if there is a key without corresponding simulated cell.
                 best_candidate_plot = plt.plot(best_candidate_t,best_candidate_v[ref], label="%s - %i evaluations"%(ref,max_evaluations))
 
 
@@ -1269,6 +1270,11 @@ if __name__ == '__main__':
         run_optimisation('CASE3',
                          'AVB_DB',
                          'C2',
+                         parameters,
+                         max_constraints,
+                         min_constraints,
+                         weights,
+                         target_data,
                          config_package="notebooks.configs.AVB",
                          data_reader="UpdatedSpreadsheetDataReader",
                          sim_time=1000,
