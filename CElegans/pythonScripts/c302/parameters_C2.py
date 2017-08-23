@@ -41,7 +41,7 @@ class ParameterisedModel(ParameterisedModel_C):
     def __init__(self):
         super(ParameterisedModel, self).__init__()
         self.level = "C2"
-        self.custom_component_types_definitions = ['cell_C.xml', 'custom_muscle_components.xml']
+        self.custom_component_types_definitions = ['cell_C.xml', 'custom_muscle_components.xml', 'custom_synapses.xml']
         
         self.set_default_bioparameters()
         print("Set default parameters for %s"%self.level)
@@ -55,7 +55,8 @@ class ParameterisedModel(ParameterisedModel_C):
         self.add_bioparameter("initial_memb_pot", "-60 mV", "BlindGuess", "0.1")
         self.add_bioparameter("muscle_initial_memb_pot", "-28 mV", "BlindGuess", "0.1")
 
-        self.add_bioparameter("specific_capacitance", "1 uF_per_cm2", "BlindGuess", "0.1")
+        self.add_bioparameter("specific_capacitance", "5 uF_per_cm2", "BlindGuess", "0.1")
+
         self.add_bioparameter("muscle_specific_capacitance", "1 uF_per_cm2", "BlindGuess", "0.1")
 
         self.add_bioparameter("neuron_spike_thresh", "-55 mV", "BlindGuess", "0.1")
@@ -106,16 +107,17 @@ class ParameterisedModel(ParameterisedModel_C):
         self.add_bioparameter("neuron_to_neuron_inh_syn_conductance", "0.29 nS", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_muscle_inh_syn_conductance", "1.29 nS", "BlindGuess", "0.1")
         
-        self.add_bioparameter("inh_syn_delta", "5 mV", "BlindGuess", "0.1")
-        self.add_bioparameter("inh_syn_vth", "0 mV", "BlindGuess", "0.1")
-        self.add_bioparameter("inh_syn_erev", "-70 mV", "BlindGuess", "0.1")
-        self.add_bioparameter("inh_syn_k", "0.015per_ms", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_neuron_inh_syn_delta", "5 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_neuron_inh_syn_vth", "0 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_neuron_inh_syn_erev", "-70 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_neuron_inh_syn_k", "0.015per_ms", "BlindGuess", "0.1")
 
         self.add_bioparameter("neuron_to_muscle_inh_syn_delta", "5 mV", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_muscle_inh_syn_vth", "0 mV", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_muscle_inh_syn_erev", "-50 mV", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_muscle_inh_syn_k", "0.025per_ms", "BlindGuess", "0.1")
-        
+
+        self.add_bioparameter("neuron_to_neuron_elec_syn_weight", "1", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_neuron_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_muscle_elec_syn_gbase", "0.00152 nS", "BlindGuess", "0.1")
 
@@ -127,6 +129,17 @@ class ParameterisedModel(ParameterisedModel_C):
         self.add_bioparameter("neuron_to_motor_delayed_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_motor_delayed_elec_syn_sigma", "0.4", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_motor_delayed_elec_syn_mu", "-30", "BlindGuess", "0.1")
+
+
+
+        #self.add_bioparameter("muscle_to_muscle_elec_syn_gbase", "0.0002 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("muscle_to_muscle_elec_syn_gbase", "0 nS", "BlindGuess", "0.1")
+
+        self.add_bioparameter("neuron_to_motor_delayed_elec_syn_weight", "1", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_motor_delayed_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_motor_delayed_elec_syn_sigma", "0.4", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_motor_delayed_elec_syn_mu", "-30", "BlindGuess", "0.1")
+
 
 
         self.add_bioparameter("unphysiological_offset_current", "5.135697186048022 pA", "KnownError", "0")
@@ -169,23 +182,6 @@ class ParameterisedModel(ParameterisedModel_C):
         self.add_bioparameter("AVBR_to_DB6_elec_syn_delay", "1250ms", "BlindGuess", "0.1")
         self.add_bioparameter("AVBR_to_DB7_elec_syn_delay", "1500ms", "BlindGuess", "0.1")"""
 
-        """self.add_bioparameter("DB1_to_DB2_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
-        self.add_bioparameter("DB2_to_DB1_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
-
-        self.add_bioparameter("DB2_to_DB3_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
-        self.add_bioparameter("DB3_to_DB2_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
-
-        self.add_bioparameter("DB3_to_DB4_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
-        self.add_bioparameter("DB4_to_DB3_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
-
-        self.add_bioparameter("DB4_to_DB5_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
-        self.add_bioparameter("DB5_to_DB4_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
-
-        self.add_bioparameter("DB5_to_DB6_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
-        self.add_bioparameter("DB6_to_DB5_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
-
-        self.add_bioparameter("DB6_to_DB7_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
-        self.add_bioparameter("DB7_to_DB6_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")"""
 
         """self.add_bioparameter("DB1_to_DB2_elec_syn_sigma", "0.2per_ms", "BlindGuess", "0.1")
         self.add_bioparameter("DB1_to_DB2_elec_syn_mu", "-30 mV", "BlindGuess", "0.1")
@@ -223,7 +219,6 @@ class ParameterisedModel(ParameterisedModel_C):
 
 
         #self.add_bioparameter("AVBR_to_DB4_exc_syn_conductance", "0 nS", "BlindGuess", "0.1")
-
         """self.add_bioparameter("neuron_to_neuron_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
 
         #self.add_bioparameter("AVBL_to_AVBR_elec_syn_gbase", "1 nS", "BlindGuess", "0.1")
@@ -299,7 +294,6 @@ class ParameterisedModel(ParameterisedModel_C):
 
         for syn in syns:
             self.add_bioparameter(syn, self.get_bioparameter('neuron_to_muscle_exc_syn_k').value, "BlindGuess", "0.1")
-        """
 
 
         #self.add_bioparameter("DB1_to_MDL06_exc_syn_delta", "5 mV", "BlindGuess", "0.1")
@@ -307,6 +301,55 @@ class ParameterisedModel(ParameterisedModel_C):
         #self.add_bioparameter("DB1_to_MDL06_exc_syn_erev", "-50 mV", "BlindGuess", "0.1")
         #self.add_bioparameter("DB1_to_MDL06_exc_syn_k", "0.50per_ms", "BlindGuess", "0.1")
 
+        self.add_bioparameter("AVBR_to_DB1_elec_syn_weight", "1", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB1_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB1_elec_syn_sigma", "0.7 per_mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB1_elec_syn_mu", "-50 mV", "BlindGuess", "0.1")
+
+        self.add_bioparameter("AVBL_to_DB2_elec_syn_weight", "1", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBL_to_DB2_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBL_to_DB2_elec_syn_sigma", "0.6 per_mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBL_to_DB2_elec_syn_mu", "-45 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB2_elec_syn_weight", "1", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB2_elec_syn_gbase", "0.01052 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB2_elec_syn_sigma", "0.6 per_mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB2_elec_syn_mu", "-45 mV", "BlindGuess", "0.1")
+
+        self.add_bioparameter("AVBL_to_DB3_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBL_to_DB3_elec_syn_sigma", "0.5 per_mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBL_to_DB3_elec_syn_mu", "-40 mV", "BlindGuess", "0.1")
+        #self.add_bioparameter("AVBR_to_DB3_elec_syn_gbase", "0.00852 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB3_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB3_elec_syn_sigma", "0.5 per_mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB3_elec_syn_mu", "-40 mV", "BlindGuess", "0.1")
+
+        self.add_bioparameter("AVBL_to_DB4_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBL_to_DB4_elec_syn_sigma", "0.4 per_mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBL_to_DB4_elec_syn_mu", "-35 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB4_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB4_elec_syn_sigma", "0.4 per_mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB4_elec_syn_mu", "-35 mV", "BlindGuess", "0.1")
+
+        self.add_bioparameter("AVBL_to_DB5_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBL_to_DB5_elec_syn_sigma", "0.3 per_mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBL_to_DB5_elec_syn_mu", "-30 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB5_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB5_elec_syn_sigma", "0.3 per_mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB5_elec_syn_mu", "-30 mV", "BlindGuess", "0.1")
+
+        self.add_bioparameter("AVBL_to_DB6_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBL_to_DB6_elec_syn_sigma", "0.2 per_mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBL_to_DB6_elec_syn_mu", "-25 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB6_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB6_elec_syn_sigma", "0.2 per_mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB6_elec_syn_mu", "-25 mV", "BlindGuess", "0.1")
+
+        self.add_bioparameter("AVBL_to_DB7_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBL_to_DB7_elec_syn_sigma", "0.1 per_mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBL_to_DB7_elec_syn_mu", "-20 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB7_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB7_elec_syn_sigma", "0.1 per_mV", "BlindGuess", "0.1")
+        self.add_bioparameter("AVBR_to_DB7_elec_syn_mu", "-20 mV", "BlindGuess", "0.1")"""
 
 
 
@@ -371,7 +414,6 @@ class ParameterisedModel(ParameterisedModel_C):
         #self.add_bioparameter("AVBL_to_DB7_elec_syn_gbase", "0.000002 nS", "BlindGuess", "0.1")
         #self.add_bioparameter("AVBR_to_DB7_elec_syn_gbase", "0.000002 nS", "BlindGuess", "0.1")
 
-
         motors = ['DB1', 'DB2', 'DB3', 'DB4', 'DB5', 'DB6', 'DB7']
 
         neuron_to_neuron_sigma_unit = 'per_mV'
@@ -408,7 +450,6 @@ class ParameterisedModel(ParameterisedModel_C):
             self.add_bioparameter('%s_to_%s_elec_syn_gbase' % (m2, m1), "%s nS" % values[v], "BlindGuess",
                                   "0.1")
             v += 1"""
-
 
 
     def create_models(self):
@@ -493,21 +534,31 @@ class ParameterisedModel(ParameterisedModel_C):
     def create_neuron_to_neuron_syn(self):
         self.neuron_to_neuron_exc_syn = GradedSynapse(id="neuron_to_neuron_exc_syn",
                                 conductance =        self.get_bioparameter("neuron_to_neuron_exc_syn_conductance").value,
-                                delta =              self.get_bioparameter("exc_syn_delta").value,
-                                Vth =                self.get_bioparameter("exc_syn_vth").value,
-                                erev =               self.get_bioparameter("exc_syn_erev").value,
-                                k =                  self.get_bioparameter("exc_syn_k").value)
+                                delta =              self.get_bioparameter("neuron_to_neuron_exc_syn_delta").value,
+                                Vth =                self.get_bioparameter("neuron_to_neuron_exc_syn_vth").value,
+                                erev =               self.get_bioparameter("neuron_to_neuron_exc_syn_erev").value,
+                                k =                  self.get_bioparameter("neuron_to_neuron_exc_syn_k").value)
 
 
         self.neuron_to_neuron_inh_syn = GradedSynapse(id="neuron_to_neuron_inh_syn",
                                 conductance =        self.get_bioparameter("neuron_to_neuron_inh_syn_conductance").value,
-                                delta =              self.get_bioparameter("inh_syn_delta").value,
-                                Vth =                self.get_bioparameter("inh_syn_vth").value,
-                                erev =               self.get_bioparameter("inh_syn_erev").value,
-                                k =                  self.get_bioparameter("inh_syn_k").value)
+                                delta =              self.get_bioparameter("neuron_to_neuron_inh_syn_delta").value,
+                                Vth =                self.get_bioparameter("neuron_to_neuron_inh_syn_vth").value,
+                                erev =               self.get_bioparameter("neuron_to_neuron_inh_syn_erev").value,
+                                k =                  self.get_bioparameter("neuron_to_neuron_inh_syn_k").value)
 
         self.neuron_to_neuron_elec_syn = GapJunction(id="neuron_to_neuron_elec_syn",
                                conductance =    self.get_bioparameter("neuron_to_neuron_elec_syn_gbase").value)
+
+        self.neuron_to_motor_elec_syn = DelayedGapJunction(id="neuron_to_motor_delayed_elec_syn",
+                                                       weight=self.get_bioparameter(
+                                                           "neuron_to_motor_delayed_elec_syn_weight").value,
+                                                       conductance=self.get_bioparameter(
+                                                           "neuron_to_motor_delayed_elec_syn_gbase").value,
+                                                       sigma=self.get_bioparameter(
+                                                           "neuron_to_motor_delayed_elec_syn_sigma").value,
+                                                       mu=self.get_bioparameter(
+                                                           "neuron_to_motor_delayed_elec_syn_mu").value)
 
 
 
@@ -535,3 +586,129 @@ class ParameterisedModel(ParameterisedModel_C):
         self.muscle_to_muscle_elec_syn = GapJunction(id="muscle_to_muscle_elec_syn",
                                conductance =    self.get_bioparameter("muscle_to_muscle_elec_syn_gbase").value)
 
+
+    def get_specific_syn_params(self, pre_cell, post_cell, syn_type, polarity):
+        if polarity == "elec":
+            print "------------"
+            print syn_type
+            prefix = "%s_to_%s_%s_syn" % (pre_cell, post_cell, polarity)
+            #delayed_gj_prefix = "%s_to_%s_delayed_%s_syn" % (pre_cell, post_cell, polarity)
+            conductance = self.get_bioparameter("%s_gbase" % prefix)
+            #delay = self.get_bioparameter("%s_delay" % prefix)
+            sigma = self.get_bioparameter("%s_sigma" % prefix)
+            mu = self.get_bioparameter("%s_mu" % prefix)
+            overridden = False
+            if conductance or sigma or mu:
+                overridden = True
+            if not conductance:
+                def_prefix = "%s_%s_syn" % (syn_type, polarity)
+                conductance = self.get_bioparameter("%s_gbase" % def_prefix)
+            if overridden:
+                syn_id = prefix
+            else:
+                syn_id = def_prefix
+            print syn_id
+            print "-------------"
+            return syn_id, conductance, sigma, mu
+
+        # Load specific parameters
+        prefix = "%s_to_%s_%s_syn" % (pre_cell, post_cell, polarity)
+        conductance = self.get_bioparameter("%s_conductance" % prefix)
+        delta = self.get_bioparameter("%s_delta" % prefix)
+        vth = self.get_bioparameter("%s_vth" % prefix)
+        erev = self.get_bioparameter("%s_erev" % prefix)
+        k = self.get_bioparameter("%s_k" % prefix)
+
+        # Load default parameters unless there are more specific parameters for the current synapse
+        def_prefix = "%s_%s_syn" % (syn_type, polarity)
+        overridden = True
+        if not conductance:
+            conductance = self.get_bioparameter("%s_conductance" % def_prefix)
+            overridden = False
+        if not delta:
+            delta = self.get_bioparameter("%s_delta" % def_prefix)
+            overridden = False
+        if not vth:
+            vth = self.get_bioparameter("%s_vth" % def_prefix)
+            overridden = False
+        if not erev:
+            erev = self.get_bioparameter("%s_erev" % def_prefix)
+            overridden = False
+        if not k:
+            k = self.get_bioparameter("%s_k" % def_prefix)
+            overridden = False
+
+        if overridden:
+            syn_id = prefix
+        else:
+            syn_id = def_prefix
+
+        return syn_id, conductance, delta, vth, erev, k
+
+    def get_syn(self, pre_cell, post_cell, syn_type, polarity):
+        if polarity == "elec":
+            syn_id, conductance, sigma, mu = self.get_specific_syn_params(pre_cell, post_cell, syn_type, polarity)
+            if sigma or mu:
+                return DelayedGapJunction(id=syn_id,
+                                          conductance=conductance.value,
+                                          sigma=sigma.value,
+                                          mu=mu.value)
+            return GapJunction(id=syn_id,
+                               conductance=conductance.value)
+        syn_id, conductance, delta, vth, erev, k = self.get_specific_syn_params(pre_cell, post_cell, syn_type, polarity)
+        return GradedSynapse(id=syn_id,
+                             conductance=conductance.value,
+                             delta=delta.value,
+                             Vth=vth.value,
+                             erev=erev.value,
+                             k=k.value)
+
+
+class SwitchedGapJunction():
+    def __init__(self, id, conductance, delay):
+        self.id = id
+        self.conductance = conductance
+        self.delay = delay
+
+    def export(self, outfile, level, namespace, name_, pretty_print=True):
+        outfile.write(
+            '    ' * level + '<switchedGapJunction id="%s" conductance="%s" delay="%s" />\n' % (
+            self.id, self.conductance, self.delay))
+
+
+class DelayedGapJunction():
+    def __init__(self, id, weight, conductance, sigma, mu):
+        self.id = id
+        self.weight = weight
+        self.conductance = conductance
+        self.sigma = sigma
+        self.mu = mu
+
+    def export(self, outfile, level, namespace, name_, pretty_print=True):
+        outfile.write(
+            '    ' * level + '<delayedGapJunction id="%s" weight="%s" conductance="%s" sigma="%s" mu="%s" />\n'
+            % (self.id, self.weight, self.conductance, self.sigma, self.mu))
+
+    def __repr__(self):
+        return "DelayedGapJunction(id=%s, weight=%s, conductance=%s, sigma=%s, mu=%s)" % (self.id, self.weight, self.conductance, self.sigma, self.mu)
+
+class DelayedGradedSynapse():
+    def __init__(self, id=None, weight=1, conductance=None, delta=None, vth=None, k=None, erev=None, sigma=None, mu=None):
+        self.id = id
+        self.weight = weight
+        self.conductance = conductance
+        self.delta = delta
+        self.vth = vth
+        self.k = k
+        self.erev = erev
+        self.sigma = sigma
+        self.mu = mu
+
+    def export(self, outfile, level, namespace, name_, pretty_print=True):
+        outfile.write(
+            '    ' * level + '<delayedGradedSynapse id="%s" weight="%s" conductance="%s" delta="%s" vth="%s" k="%s" erev="%s" sigma="%s" mu="%s" />\n'
+            % (self.id, self.weight, self.conductance, self.delta, self.vth, self.k, self.erev, self.sigma, self.mu))
+
+    def __repr__(self):
+        return "DelayedGradedSynapse(id=%s, weight=%s, conductance=%s, delta=%s, vth=%s, k=%s, erev=%s, sigma=%s, mu=%s)" \
+               % (self.id, self.weight, self.conductance, self.delta, self.vth, self.k, self.erev, self.sigma, self.mu)
