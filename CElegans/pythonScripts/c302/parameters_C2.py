@@ -88,20 +88,19 @@ class ParameterisedModel(ParameterisedModel_C):
         self.add_bioparameter("ca_conc_rho", "0.000238919 mol_per_m_per_A_per_s", "BlindGuess", "0.1")
 
         self.add_bioparameter("neuron_to_neuron_exc_syn_conductance", "0.49 nS", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_to_muscle_exc_syn_conductance", "3.46 nS", "BlindGuess", "0.1")
-        
-        self.add_bioparameter("neuron_to_neuron_exc_syn_delta", "5 mV", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_to_neuron_exc_syn_vth", "00 mV", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_to_neuron_exc_syn_erev", "-10 mV", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_to_neuron_exc_syn_k", "0.5per_ms", "BlindGuess", "0.1")
 
-        self.add_bioparameter("neuron_to_muscle_exc_syn_weight", "1", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_to_muscle_exc_syn_delta", "19 mV", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_to_muscle_exc_syn_vth", "27 mV", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_to_muscle_exc_syn_erev", "37 mV", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_to_muscle_exc_syn_k", "1.205per_ms", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_to_muscle_exc_syn_sigma", "0.5 per_mV", "BlindGuess", "0.1")
-        self.add_bioparameter("neuron_to_muscle_exc_syn_mu", "5 mV", "BlindGuess", "0.1")
+
+        self.add_bioparameter("neuron_to_muscle_exc_syn_conductance", "0.10 nS", "BlindGuess", "0.1")
+
+        self.add_bioparameter("exc_syn_delta", "5 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("exc_syn_vth", "00 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("exc_syn_erev", "-10 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("exc_syn_k", "0.5per_ms", "BlindGuess", "0.1")
+
+        self.add_bioparameter("neuron_to_muscle_exc_syn_delta", "5 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_muscle_exc_syn_vth", "00 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_muscle_exc_syn_erev", "00 mV", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_muscle_exc_syn_k", "0.025per_ms", "BlindGuess", "0.1")
 
         self.add_bioparameter("neuron_to_neuron_inh_syn_conductance", "0.29 nS", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_muscle_inh_syn_conductance", "1.29 nS", "BlindGuess", "0.1")
@@ -119,7 +118,16 @@ class ParameterisedModel(ParameterisedModel_C):
         self.add_bioparameter("neuron_to_neuron_elec_syn_weight", "1", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_neuron_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
         self.add_bioparameter("neuron_to_muscle_elec_syn_gbase", "0.00152 nS", "BlindGuess", "0.1")
-        self.add_bioparameter("muscle_to_muscle_elec_syn_gbase", "0.0052 nS", "BlindGuess", "0.1")
+
+
+        #self.add_bioparameter("muscle_to_muscle_elec_syn_gbase", "0.0002 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("muscle_to_muscle_elec_syn_gbase", "0 nS", "BlindGuess", "0.1")
+
+        self.add_bioparameter("neuron_to_motor_delayed_elec_syn_weight", "1", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_motor_delayed_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_motor_delayed_elec_syn_sigma", "0.4", "BlindGuess", "0.1")
+        self.add_bioparameter("neuron_to_motor_delayed_elec_syn_mu", "-30", "BlindGuess", "0.1")
+
 
 
         #self.add_bioparameter("muscle_to_muscle_elec_syn_gbase", "0.0002 nS", "BlindGuess", "0.1")
@@ -172,7 +180,7 @@ class ParameterisedModel(ParameterisedModel_C):
         self.add_bioparameter("AVBR_to_DB6_elec_syn_delay", "1250ms", "BlindGuess", "0.1")
         self.add_bioparameter("AVBR_to_DB7_elec_syn_delay", "1500ms", "BlindGuess", "0.1")"""
 
-        self.add_bioparameter("DB1_to_DB2_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
+        """self.add_bioparameter("DB1_to_DB2_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
         self.add_bioparameter("DB2_to_DB1_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
 
         self.add_bioparameter("DB2_to_DB3_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
@@ -188,7 +196,7 @@ class ParameterisedModel(ParameterisedModel_C):
         self.add_bioparameter("DB6_to_DB5_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
 
         self.add_bioparameter("DB6_to_DB7_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
-        self.add_bioparameter("DB7_to_DB6_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")
+        self.add_bioparameter("DB7_to_DB6_elec_syn_gbase", "0.02252 nS", "BlindGuess", "0.1")"""
 
         """self.add_bioparameter("DB1_to_DB2_elec_syn_sigma", "0.2per_ms", "BlindGuess", "0.1")
         self.add_bioparameter("DB1_to_DB2_elec_syn_mu", "-30 mV", "BlindGuess", "0.1")
@@ -227,7 +235,7 @@ class ParameterisedModel(ParameterisedModel_C):
 
         #self.add_bioparameter("AVBR_to_DB4_exc_syn_conductance", "0 nS", "BlindGuess", "0.1")
 
-        self.add_bioparameter("neuron_to_neuron_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
+        """self.add_bioparameter("neuron_to_neuron_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
 
         #self.add_bioparameter("AVBL_to_AVBR_elec_syn_gbase", "1 nS", "BlindGuess", "0.1")
 
@@ -302,7 +310,7 @@ class ParameterisedModel(ParameterisedModel_C):
 
         for syn in syns:
             self.add_bioparameter(syn, self.get_bioparameter('neuron_to_muscle_exc_syn_k').value, "BlindGuess", "0.1")
-
+        """
 
 
         #self.add_bioparameter("DB1_to_MDL06_exc_syn_delta", "5 mV", "BlindGuess", "0.1")
@@ -359,7 +367,6 @@ class ParameterisedModel(ParameterisedModel_C):
         self.add_bioparameter("AVBR_to_DB7_elec_syn_gbase", "0.01252 nS", "BlindGuess", "0.1")
         self.add_bioparameter("AVBR_to_DB7_elec_syn_sigma", "0.1 per_mV", "BlindGuess", "0.1")
         self.add_bioparameter("AVBR_to_DB7_elec_syn_mu", "-20 mV", "BlindGuess", "0.1")"""
-
 
 
         """self.add_bioparameter("AVBL_to_VB1_elec_syn_sigma", "0.3per_ms", "BlindGuess", "0.1")
